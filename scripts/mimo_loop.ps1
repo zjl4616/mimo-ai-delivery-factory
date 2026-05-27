@@ -87,12 +87,37 @@ $recent
 "@
 
 $chatScript = Join-Path $RepoRoot "scripts\mimo_chat.ps1"
-$result = & powershell -NoProfile -ExecutionPolicy Bypass -File $chatScript -Model $Model -MaxTokens $MaxTokens -Prompt $prompt
+$result = & $chatScript -Model $Model -MaxTokens $MaxTokens -Prompt $prompt
 
 $runFile = Join-Path $outputDir ($fileStamp + $runSuffix)
 $repoRunFile = Join-Path $repoOutputDir "$fileStamp-loop-output.md"
+if ([string]::IsNullOrWhiteSpace($result)) {
+  $result = @"
+# MiMo 后台工厂输出为空
+
+时间：$stamp
+
+本轮未获取到有效内容。可能原因：
+- 模型返回为空或被截断
+- 网络/服务抖动导致响应异常
+
+建议：稍后重试一次；或降低 MaxTokens 以减少长输出失败风险。
+"@
+}
+
 $result | Set-Content -LiteralPath $runFile -Encoding UTF8
 $result | Set-Content -LiteralPath $repoRunFile -Encoding UTF8
+
+# Update public dashboard status snapshot (sanitized, local)
+try {
+  $snapshotScript = Join-Path $RepoRoot "scripts\status_snapshot.py"
+  $dashboardOut = Join-Path $RepoRoot "dashboard\status.json"
+  if (Test-Path $snapshotScript) {
+    & python $snapshotScript --base $RepoRoot --repo $RepoRoot --runs $outputDir --logs $repoOutputDir --output $dashboardOut | Out-Null
+  }
+} catch {
+  # Dashboard generation must never break the loop.
+}
 
 $summary = ($result -split "`n" | Select-Object -First 40) -join "`n"
 $entry = @"

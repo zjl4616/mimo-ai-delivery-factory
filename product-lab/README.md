@@ -5,6 +5,11 @@ Small public-demand experiments that can be built, published, and delivered with
 ## Active Experiments
 
 - `automation-scorecard-tool/` - AI automation opportunity scorecard
+- `n8n-json-explainer/` - n8n workflow JSON Chinese explainer (static, browser-only)
+
+## Operations
+
+- `../dashboard/` - public status dashboard for product progress, server loop health, promotion state, and confirmation queue.
 
 ## Rules
 

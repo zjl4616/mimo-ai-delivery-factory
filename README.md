@@ -54,6 +54,7 @@ Why this first: it uses existing Obsidian materials, can be sold from a simple G
 - [docs/operator-confirmation.md](docs/operator-confirmation.md) - what the operator must approve
 - [docs/background-loop.md](docs/background-loop.md) - Windows scheduled MiMo background loop
 - [site/](site/) - static landing page
+- [dashboard/](dashboard/) - public sanitized project status dashboard
 - [product-lab/](product-lab/) - independently deliverable public-demand experiments
 - [scripts/](scripts/) - local helper scripts
 

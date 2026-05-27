@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MiMo 项目运行面板</title>
+    <meta
+      name="description"
+      content="MiMo Token-To-Cash 30 天增长实验的公开运行状态、产品进度和推广状态。"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="dashboard-shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">MiMo Token-To-Cash</p>
+          <h1>项目运行面板</h1>
+          <p class="lede">查看服务器是否持续工作、产品做到了哪一步、推广是否开始，以及哪些事项需要最终确认。</p>
+        </div>
+        <section class="status-card" aria-label="运行状态">
+          <span id="healthPill" class="health-pill is-loading">读取中</span>
+          <strong id="healthLabel">正在同步状态</strong>
+          <p id="healthMeta">等待服务器状态快照。</p>
+        </section>
+      </header>
+
+      <section class="metric-strip" aria-label="关键指标">
+        <article>
+          <span>产品路线</span>
+          <strong id="productsTotal">--</strong>
+          <em>实验池总数</em>
+        </article>
+        <article>
+          <span>已上线</span>
+          <strong id="productsOnline">--</strong>
+          <em>可公开访问</em>
+        </article>
+        <article>
+          <span>服务器运行</span>
+          <strong id="serverRuns">--</strong>
+          <em>已记录轮次</em>
+        </article>
+        <article>
+          <span>收入状态</span>
+          <strong id="revenueState">--</strong>
+          <em>付款闭环</em>
+        </article>
+      </section>
+
+      <section class="main-grid">
+        <article class="panel products-panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Product Lab</p>
+              <h2>产品进度</h2>
+            </div>
+            <a href="../tools/automation-scorecard/">打开 P01</a>
+          </div>
+          <div id="productList" class="product-list"></div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Growth</p>
+              <h2>推广状态</h2>
+            </div>
+          </div>
+          <div class="promotion-box">
+            <strong id="promotionLabel">--</strong>
+            <p id="promotionNext">--</p>
+            <div id="channelList" class="channel-list"></div>
+          </div>
+        </article>
+
+        <article class="panel runs-panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Server Loop</p>
+              <h2>最近产出</h2>
+            </div>
+            <span id="generatedAt">--</span>
+          </div>
+          <div id="runList" class="run-list"></div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Control</p>
+              <h2>确认队列</h2>
+            </div>
+          </div>
+          <div id="confirmationList" class="confirmation-list"></div>
+          <div class="safety-note">
+            <strong>公开快照</strong>
+            <p id="safetyNote">这个面板不会展示 Token、密钥或客户私密内容。</p>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
