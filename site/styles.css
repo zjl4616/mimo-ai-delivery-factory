@@ -22,7 +22,7 @@ html {
 
 body {
   margin: 0;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Microsoft YaHei", "PingFang SC", "Noto Serif SC", Georgia, "Times New Roman", serif;
   color: var(--ink);
   background:
     linear-gradient(90deg, rgba(20, 20, 20, 0.035) 1px, transparent 1px),
@@ -74,13 +74,36 @@ a {
 
 .nav {
   gap: clamp(12px, 3vw, 28px);
-  font-family: "Trebuchet MS", Verdana, sans-serif;
+  font-family: "Microsoft YaHei", "PingFang SC", "Trebuchet MS", Verdana, sans-serif;
   font-size: 14px;
 }
 
 .nav a {
   color: var(--muted);
   text-decoration: none;
+}
+
+.lang-switch {
+  display: inline-grid;
+  grid-template-columns: repeat(2, 48px);
+  gap: 0;
+  border: 1px solid var(--ink);
+  background: var(--field);
+}
+
+.lang-button {
+  min-height: 32px;
+  padding: 0;
+  border: 0;
+  color: var(--muted);
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+.lang-button.is-active {
+  color: white;
+  background: var(--ink);
 }
 
 .hero {
@@ -99,7 +122,7 @@ a {
 .eyebrow {
   margin: 0 0 16px;
   color: var(--accent-2);
-  font-family: "Trebuchet MS", Verdana, sans-serif;
+  font-family: "Microsoft YaHei", "PingFang SC", "Trebuchet MS", Verdana, sans-serif;
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -117,7 +140,7 @@ h1 {
   margin: 0;
   max-width: 760px;
   font-size: clamp(52px, 8vw, 116px);
-  line-height: 0.93;
+  line-height: 1.02;
   font-weight: 700;
 }
 
@@ -137,7 +160,7 @@ h3 {
   max-width: 680px;
   margin: 26px 0 0;
   color: var(--muted);
-  font-family: "Trebuchet MS", Verdana, sans-serif;
+  font-family: "Microsoft YaHei", "PingFang SC", "Trebuchet MS", Verdana, sans-serif;
   font-size: clamp(18px, 2vw, 22px);
   line-height: 1.55;
 }
@@ -157,7 +180,7 @@ h3 {
   padding: 0 18px;
   border: 1px solid var(--ink);
   text-decoration: none;
-  font-family: "Trebuchet MS", Verdana, sans-serif;
+  font-family: "Microsoft YaHei", "PingFang SC", "Trebuchet MS", Verdana, sans-serif;
   font-weight: 700;
 }
 
@@ -185,7 +208,7 @@ h3 {
   gap: 14px;
   padding-bottom: 18px;
   border-bottom: 1px solid var(--line);
-  font-family: "Trebuchet MS", Verdana, sans-serif;
+  font-family: "Microsoft YaHei", "PingFang SC", "Trebuchet MS", Verdana, sans-serif;
 }
 
 .panel-head strong {
@@ -208,7 +231,7 @@ h3 {
 
 .score-grid dt {
   color: var(--muted);
-  font-family: "Trebuchet MS", Verdana, sans-serif;
+  font-family: "Microsoft YaHei", "PingFang SC", "Trebuchet MS", Verdana, sans-serif;
   font-size: 13px;
 }
 
@@ -222,7 +245,7 @@ h3 {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 8px;
-  font-family: "Trebuchet MS", Verdana, sans-serif;
+  font-family: "Microsoft YaHei", "PingFang SC", "Trebuchet MS", Verdana, sans-serif;
   font-size: 13px;
   font-weight: 700;
 }
@@ -266,7 +289,7 @@ h3 {
   display: block;
   margin-top: 8px;
   color: var(--muted);
-  font-family: "Trebuchet MS", Verdana, sans-serif;
+  font-family: "Microsoft YaHei", "PingFang SC", "Trebuchet MS", Verdana, sans-serif;
 }
 
 .section {
@@ -306,14 +329,14 @@ h3 {
 .offer-title span {
   flex: 0 0 auto;
   color: var(--gold);
-  font-family: "Trebuchet MS", Verdana, sans-serif;
+  font-family: "Microsoft YaHei", "PingFang SC", "Trebuchet MS", Verdana, sans-serif;
   font-weight: 700;
 }
 
 .offer p,
 .start p {
   color: var(--muted);
-  font-family: "Trebuchet MS", Verdana, sans-serif;
+  font-family: "Microsoft YaHei", "PingFang SC", "Trebuchet MS", Verdana, sans-serif;
   line-height: 1.6;
 }
 
@@ -324,7 +347,7 @@ h3 {
   padding: 0;
   margin: 24px 0 0;
   list-style: none;
-  font-family: "Trebuchet MS", Verdana, sans-serif;
+  font-family: "Microsoft YaHei", "PingFang SC", "Trebuchet MS", Verdana, sans-serif;
 }
 
 .offer li {
@@ -357,7 +380,7 @@ h3 {
 
 .case-list span {
   color: var(--muted);
-  font-family: "Trebuchet MS", Verdana, sans-serif;
+  font-family: "Microsoft YaHei", "PingFang SC", "Trebuchet MS", Verdana, sans-serif;
   line-height: 1.5;
 }
 
@@ -384,7 +407,7 @@ h3 {
   display: block;
   margin-bottom: 48px;
   color: var(--accent-2);
-  font-family: "Trebuchet MS", Verdana, sans-serif;
+  font-family: "Microsoft YaHei", "PingFang SC", "Trebuchet MS", Verdana, sans-serif;
   font-weight: 700;
 }
 
@@ -400,7 +423,7 @@ h3 {
 .steps span {
   margin-top: 12px;
   color: var(--muted);
-  font-family: "Trebuchet MS", Verdana, sans-serif;
+  font-family: "Microsoft YaHei", "PingFang SC", "Trebuchet MS", Verdana, sans-serif;
   line-height: 1.5;
 }
 
@@ -432,8 +455,10 @@ h3 {
   }
 
   .nav {
+    display: flex;
     margin-top: 12px;
     justify-content: space-between;
+    flex-wrap: wrap;
   }
 
   .hero-panel,

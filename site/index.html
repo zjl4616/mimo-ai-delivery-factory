@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>MiMo AI Delivery Factory</title>
+    <title>MiMo AI 交付工厂</title>
     <meta
       name="description"
-      content="Fixed-scope AI automation and AI coding workflow sprints for founders, creators, and small teams."
+      content="面向创始人、创作者和小团队的固定范围 AI 自动化与 AI 编程工作流交付服务。"
     />
     <link rel="stylesheet" href="./styles.css" />
   </head>
@@ -14,99 +14,100 @@
     <header class="topbar">
       <a class="brand" href="#top" aria-label="MiMo AI Delivery Factory home">
         <span class="brand-mark">MF</span>
-        <span>MiMo Factory</span>
+        <span data-i18n="brand">MiMo 交付工厂</span>
       </a>
       <nav class="nav" aria-label="Primary navigation">
-        <a href="#offers">Offers</a>
-        <a href="#cases">Cases</a>
-        <a href="#process">Process</a>
-        <a href="#start">Start</a>
+        <a href="#offers" data-i18n="navOffers">服务</a>
+        <a href="#cases" data-i18n="navCases">案例</a>
+        <a href="#process" data-i18n="navProcess">流程</a>
+        <a href="#start" data-i18n="navStart">开始</a>
+        <div class="lang-switch" aria-label="Language switch">
+          <button class="lang-button is-active" type="button" data-lang="zh">中文</button>
+          <button class="lang-button" type="button" data-lang="en">EN</button>
+        </div>
       </nav>
     </header>
 
     <main id="top">
       <section class="hero">
         <div class="hero-copy">
-          <p class="eyebrow">AI automation sprints</p>
-          <h1>One repeated workflow, automated in days.</h1>
-          <p class="lede">
-            I build small AI-assisted systems for founders and teams: inquiry replies,
-            reports, content workflows, knowledge bases, and AI coding setups.
-          </p>
+          <p class="eyebrow" data-i18n="heroEyebrow">AI 自动化交付冲刺</p>
+          <h1 data-i18n="heroTitle">把一个重复流程，在几天内做成可用自动化。</h1>
+          <p class="lede" data-i18n="heroLede">我为创始人、创作者和小团队交付小而稳的 AI 工作流：询盘回复、周报、内容复用、知识库和 AI 编程协作体系。</p>
           <div class="actions">
-            <a class="button primary" href="#start">Request a workflow audit</a>
-            <a class="button secondary" href="https://github.com/zjl4616/mimo-ai-delivery-factory/blob/main/offers/ai-automation-starter-sprint.md">View sprint scope</a>
+            <a class="button primary" href="#start" data-i18n="heroPrimary">申请一次流程诊断</a>
+            <a class="button secondary" href="https://github.com/zjl4616/mimo-ai-delivery-factory/blob/main/offers/ai-automation-starter-sprint.md" data-i18n="heroSecondary">查看交付范围</a>
           </div>
         </div>
         <div class="hero-panel" aria-label="Automation scorecard preview">
           <div class="panel-head">
-            <span>Automation Candidate</span>
-            <strong>Strong Fit</strong>
+            <span data-i18n="panelTitle">自动化候选流程</span>
+            <strong data-i18n="panelFit">强匹配</strong>
           </div>
           <dl class="score-grid">
-            <div><dt>Repeats</dt><dd>Daily</dd></div>
-            <div><dt>Current time</dt><dd>5-20h/wk</dd></div>
-            <div><dt>Human review</dt><dd>Kept</dd></div>
-            <div><dt>Build window</dt><dd>3 days</dd></div>
+            <div><dt data-i18n="scoreRepeats">重复频率</dt><dd data-i18n="scoreDaily">每天</dd></div>
+            <div><dt data-i18n="scoreTime">当前耗时</dt><dd data-i18n="scoreHours">5-20 小时/周</dd></div>
+            <div><dt data-i18n="scoreReview">人工复核</dt><dd data-i18n="scoreKept">保留</dd></div>
+            <div><dt data-i18n="scoreWindow">交付周期</dt><dd data-i18n="scoreDays">3 天</dd></div>
           </dl>
           <div class="flow">
-            <span>Input</span>
-            <span>Extract</span>
-            <span>Draft</span>
-            <span>Approve</span>
+            <span data-i18n="flowInput">输入</span>
+            <span data-i18n="flowExtract">提取</span>
+            <span data-i18n="flowDraft">生成</span>
+            <span data-i18n="flowApprove">审核</span>
           </div>
         </div>
       </section>
 
       <section class="band metrics" aria-label="Service facts">
         <div>
-          <strong>3 days</strong>
-          <span>starter sprint</span>
+          <strong data-i18n="metricDays">3 天</strong>
+          <span data-i18n="metricSprint">启动冲刺</span>
         </div>
         <div>
-          <strong>1 workflow</strong>
-          <span>small scope first</span>
+          <strong data-i18n="metricWorkflow">1 个流程</strong>
+          <span data-i18n="metricSmall">先做小范围</span>
         </div>
         <div>
-          <strong>Human review</strong>
-          <span>before sensitive output</span>
+          <strong data-i18n="metricReview">人工复核</strong>
+          <span data-i18n="metricSensitive">敏感输出前保留</span>
         </div>
         <div>
-          <strong>Docs included</strong>
-          <span>handoff and maintenance</span>
+          <strong data-i18n="metricDocs">含文档</strong>
+          <span data-i18n="metricHandoff">交付与维护说明</span>
         </div>
       </section>
 
       <section id="offers" class="section">
         <div class="section-head">
-          <p class="eyebrow">Fixed-scope offers</p>
-          <h2>Start with a service that can close fast.</h2>
+          <p class="eyebrow" data-i18n="offersEyebrow">固定范围服务</p>
+          <h2 data-i18n="offersTitle">先卖一个容易成交的小交付。</h2>
         </div>
         <div class="offer-grid">
           <article class="offer">
             <div class="offer-title">
-              <h3>AI Automation Starter Sprint</h3>
-              <span>RMB 1,999-4,999</span>
+              <h3 data-i18n="offerOneTitle">AI 自动化启动冲刺</h3>
+              <span data-i18n="offerOnePrice">人民币 1,999-4,999</span>
             </div>
-            <p>Map one repetitive workflow, build a prototype, add human review, and hand it over with docs.</p>
+            <p data-i18n="offerOneBody">梳理一个重复流程，做出可跑原型，加入人工复核，并用文档完成交付。</p>
             <ul>
-              <li>Workflow map</li>
-              <li>Automation scorecard</li>
-              <li>Working prototype</li>
-              <li>Maintenance checklist</li>
+              <li data-i18n="offerOneItemA">流程图</li>
+              <li data-i18n="offerOneItemB">自动化评分表</li>
+              <li data-i18n="offerOneItemC">可运行原型</li>
+              <li data-i18n="offerOneItemD">维护清单</li>
             </ul>
           </article>
           <article class="offer">
             <div class="offer-title">
-              <h3>AI Coding Workflow Setup</h3>
-              <span>RMB 999-12,999</span>
+              <h3 data-i18n="offerTwoTitle">AI 编程工作流搭建</h3>
+              <span data-i18n="offerTwoPrice">人民币 999-12,999</span>
             </div>
-            <p>Turn scattered AI coding into a repeatable engineering workflow with specs, agent docs, and review gates.</p>
+            <p data-i18n="offerTwoBody">把零散 AI 编程变成可复用工程流程：需求文档、Agent 说明、评审关卡和测试清单。</p>
             <ul>
-              <li>Repo structure</li>
-              <li>PRD/design/tech templates</li>
-              <li>Review checklist</li>
-              <li>Founder build sprint option</li>
+              <li data-i18n="offerTwoItemA">仓库结构</li>
+              <li data-i18n="offerTwoItemB">PRD/设计/技术模板</li>
+              <li data-i18n="offerTwoItemC">评审清单</li>
+              <li data-i18n="offerTwoItemD">创始人构建冲刺</li>
             </ul>
           </article>
         </div>
@@ -114,64 +115,228 @@
 
       <section id="cases" class="section muted">
         <div class="section-head">
-          <p class="eyebrow">Reusable cases</p>
-          <h2>Case patterns ready to adapt.</h2>
+          <p class="eyebrow" data-i18n="casesEyebrow">可复用案例</p>
+          <h2 data-i18n="casesTitle">这些场景可以马上改造成客户方案。</h2>
         </div>
         <div class="case-list">
           <a href="https://github.com/zjl4616/mimo-ai-delivery-factory/blob/main/case-studies/inquiry-reply-automation.md">
-            <strong>Inquiry reply automation</strong>
-            <span>Capture inquiry, match product data, draft reply, send for approval.</span>
+            <strong data-i18n="caseOneTitle">询盘回复自动化</strong>
+            <span data-i18n="caseOneBody">采集询盘、匹配产品资料、生成回复草稿，再交给人工确认。</span>
           </a>
           <a href="https://github.com/zjl4616/mimo-ai-delivery-factory/blob/main/case-studies/ai-coding-course-assets.md">
-            <strong>AI coding course assets</strong>
-            <span>Move learners from demos to maintainable product delivery.</span>
+            <strong data-i18n="caseTwoTitle">AI 编程课程资产</strong>
+            <span data-i18n="caseTwoBody">把学员从演示项目带到可维护、可交付的产品流程。</span>
           </a>
           <a href="https://github.com/zjl4616/mimo-ai-delivery-factory/blob/main/case-studies/agent-managed-knowledge-base.md">
-            <strong>Agent-managed knowledge base</strong>
-            <span>Convert raw notes into project, content, and customer follow-up assets.</span>
+            <strong data-i18n="caseThreeTitle">Agent 管理知识库</strong>
+            <span data-i18n="caseThreeBody">把原始笔记转成项目资产、内容资产和客户跟进资产。</span>
           </a>
         </div>
       </section>
 
       <section id="process" class="section">
         <div class="section-head">
-          <p class="eyebrow">Delivery process</p>
-          <h2>Small workflow first. Then expand.</h2>
+          <p class="eyebrow" data-i18n="processEyebrow">交付流程</p>
+          <h2 data-i18n="processTitle">先做一个小流程，再扩展。</h2>
         </div>
         <ol class="steps">
           <li>
-            <strong>Diagnose</strong>
-            <span>Score repetition, data quality, time saved, and privacy risk.</span>
+            <strong data-i18n="stepOneTitle">诊断</strong>
+            <span data-i18n="stepOneBody">评估重复频率、数据质量、节省时间和隐私风险。</span>
           </li>
           <li>
-            <strong>Prototype</strong>
-            <span>Build with the lowest moving-parts stack that proves value.</span>
+            <strong data-i18n="stepTwoTitle">原型</strong>
+            <span data-i18n="stepTwoBody">用最少组件做出能证明价值的版本。</span>
           </li>
           <li>
-            <strong>Review</strong>
-            <span>Keep human approval before messages, quotes, or sensitive output.</span>
+            <strong data-i18n="stepThreeTitle">复核</strong>
+            <span data-i18n="stepThreeBody">消息、报价和敏感输出前保留人工确认。</span>
           </li>
           <li>
-            <strong>Handoff</strong>
-            <span>Document how to run, inspect, and maintain the workflow.</span>
+            <strong data-i18n="stepFourTitle">交付</strong>
+            <span data-i18n="stepFourBody">写清如何运行、检查和维护这个流程。</span>
           </li>
         </ol>
       </section>
 
       <section id="start" class="section start">
         <div>
-          <p class="eyebrow">Start here</p>
-          <h2>Send one repeated task and one sample input.</h2>
-          <p>
-            The first audit decides whether the workflow is worth automating, what to prototype,
-            and where human review must remain.
-          </p>
+          <p class="eyebrow" data-i18n="startEyebrow">从这里开始</p>
+          <h2 data-i18n="startTitle">发来一个重复任务和一个样例输入。</h2>
+          <p data-i18n="startBody">第一次诊断会判断它是否值得自动化、应该做什么原型，以及哪里必须保留人工复核。</p>
         </div>
         <div class="start-box">
-          <p>Use the discovery template:</p>
-          <a class="button primary" href="https://github.com/zjl4616/mimo-ai-delivery-factory/blob/main/templates/client-discovery.md">Open discovery form</a>
+          <p data-i18n="startBox">使用需求访谈模板：</p>
+          <a class="button primary" href="https://github.com/zjl4616/mimo-ai-delivery-factory/blob/main/templates/client-discovery.md" data-i18n="startButton">打开模板</a>
         </div>
       </section>
     </main>
+    <script>
+      const copy = {
+        zh: {
+          brand: "MiMo 交付工厂",
+          navOffers: "服务",
+          navCases: "案例",
+          navProcess: "流程",
+          navStart: "开始",
+          heroEyebrow: "AI 自动化交付冲刺",
+          heroTitle: "把一个重复流程，在几天内做成可用自动化。",
+          heroLede: "我为创始人、创作者和小团队交付小而稳的 AI 工作流：询盘回复、周报、内容复用、知识库和 AI 编程协作体系。",
+          heroPrimary: "申请一次流程诊断",
+          heroSecondary: "查看交付范围",
+          panelTitle: "自动化候选流程",
+          panelFit: "强匹配",
+          scoreRepeats: "重复频率",
+          scoreDaily: "每天",
+          scoreTime: "当前耗时",
+          scoreHours: "5-20 小时/周",
+          scoreReview: "人工复核",
+          scoreKept: "保留",
+          scoreWindow: "交付周期",
+          scoreDays: "3 天",
+          flowInput: "输入",
+          flowExtract: "提取",
+          flowDraft: "生成",
+          flowApprove: "审核",
+          metricDays: "3 天",
+          metricSprint: "启动冲刺",
+          metricWorkflow: "1 个流程",
+          metricSmall: "先做小范围",
+          metricReview: "人工复核",
+          metricSensitive: "敏感输出前保留",
+          metricDocs: "含文档",
+          metricHandoff: "交付与维护说明",
+          offersEyebrow: "固定范围服务",
+          offersTitle: "先卖一个容易成交的小交付。",
+          offerOneTitle: "AI 自动化启动冲刺",
+          offerOnePrice: "人民币 1,999-4,999",
+          offerOneBody: "梳理一个重复流程，做出可跑原型，加入人工复核，并用文档完成交付。",
+          offerOneItemA: "流程图",
+          offerOneItemB: "自动化评分表",
+          offerOneItemC: "可运行原型",
+          offerOneItemD: "维护清单",
+          offerTwoTitle: "AI 编程工作流搭建",
+          offerTwoPrice: "人民币 999-12,999",
+          offerTwoBody: "把零散 AI 编程变成可复用工程流程：需求文档、Agent 说明、评审关卡和测试清单。",
+          offerTwoItemA: "仓库结构",
+          offerTwoItemB: "PRD/设计/技术模板",
+          offerTwoItemC: "评审清单",
+          offerTwoItemD: "创始人构建冲刺",
+          casesEyebrow: "可复用案例",
+          casesTitle: "这些场景可以马上改造成客户方案。",
+          caseOneTitle: "询盘回复自动化",
+          caseOneBody: "采集询盘、匹配产品资料、生成回复草稿，再交给人工确认。",
+          caseTwoTitle: "AI 编程课程资产",
+          caseTwoBody: "把学员从演示项目带到可维护、可交付的产品流程。",
+          caseThreeTitle: "Agent 管理知识库",
+          caseThreeBody: "把原始笔记转成项目资产、内容资产和客户跟进资产。",
+          processEyebrow: "交付流程",
+          processTitle: "先做一个小流程，再扩展。",
+          stepOneTitle: "诊断",
+          stepOneBody: "评估重复频率、数据质量、节省时间和隐私风险。",
+          stepTwoTitle: "原型",
+          stepTwoBody: "用最少组件做出能证明价值的版本。",
+          stepThreeTitle: "复核",
+          stepThreeBody: "消息、报价和敏感输出前保留人工确认。",
+          stepFourTitle: "交付",
+          stepFourBody: "写清如何运行、检查和维护这个流程。",
+          startEyebrow: "从这里开始",
+          startTitle: "发来一个重复任务和一个样例输入。",
+          startBody: "第一次诊断会判断它是否值得自动化、应该做什么原型，以及哪里必须保留人工复核。",
+          startBox: "使用需求访谈模板：",
+          startButton: "打开模板"
+        },
+        en: {
+          brand: "MiMo Factory",
+          navOffers: "Offers",
+          navCases: "Cases",
+          navProcess: "Process",
+          navStart: "Start",
+          heroEyebrow: "AI automation sprints",
+          heroTitle: "One repeated workflow, automated in days.",
+          heroLede: "I build small AI-assisted systems for founders and teams: inquiry replies, reports, content workflows, knowledge bases, and AI coding setups.",
+          heroPrimary: "Request a workflow audit",
+          heroSecondary: "View sprint scope",
+          panelTitle: "Automation Candidate",
+          panelFit: "Strong Fit",
+          scoreRepeats: "Repeats",
+          scoreDaily: "Daily",
+          scoreTime: "Current time",
+          scoreHours: "5-20h/wk",
+          scoreReview: "Human review",
+          scoreKept: "Kept",
+          scoreWindow: "Build window",
+          scoreDays: "3 days",
+          flowInput: "Input",
+          flowExtract: "Extract",
+          flowDraft: "Draft",
+          flowApprove: "Approve",
+          metricDays: "3 days",
+          metricSprint: "starter sprint",
+          metricWorkflow: "1 workflow",
+          metricSmall: "small scope first",
+          metricReview: "Human review",
+          metricSensitive: "before sensitive output",
+          metricDocs: "Docs included",
+          metricHandoff: "handoff and maintenance",
+          offersEyebrow: "Fixed-scope offers",
+          offersTitle: "Start with a service that can close fast.",
+          offerOneTitle: "AI Automation Starter Sprint",
+          offerOnePrice: "RMB 1,999-4,999",
+          offerOneBody: "Map one repetitive workflow, build a prototype, add human review, and hand it over with docs.",
+          offerOneItemA: "Workflow map",
+          offerOneItemB: "Automation scorecard",
+          offerOneItemC: "Working prototype",
+          offerOneItemD: "Maintenance checklist",
+          offerTwoTitle: "AI Coding Workflow Setup",
+          offerTwoPrice: "RMB 999-12,999",
+          offerTwoBody: "Turn scattered AI coding into a repeatable engineering workflow with specs, agent docs, and review gates.",
+          offerTwoItemA: "Repo structure",
+          offerTwoItemB: "PRD/design/tech templates",
+          offerTwoItemC: "Review checklist",
+          offerTwoItemD: "Founder build sprint option",
+          casesEyebrow: "Reusable cases",
+          casesTitle: "Case patterns ready to adapt.",
+          caseOneTitle: "Inquiry reply automation",
+          caseOneBody: "Capture inquiry, match product data, draft reply, send for approval.",
+          caseTwoTitle: "AI coding course assets",
+          caseTwoBody: "Move learners from demos to maintainable product delivery.",
+          caseThreeTitle: "Agent-managed knowledge base",
+          caseThreeBody: "Convert raw notes into project, content, and customer follow-up assets.",
+          processEyebrow: "Delivery process",
+          processTitle: "Small workflow first. Then expand.",
+          stepOneTitle: "Diagnose",
+          stepOneBody: "Score repetition, data quality, time saved, and privacy risk.",
+          stepTwoTitle: "Prototype",
+          stepTwoBody: "Build with the lowest moving-parts stack that proves value.",
+          stepThreeTitle: "Review",
+          stepThreeBody: "Keep human approval before messages, quotes, or sensitive output.",
+          stepFourTitle: "Handoff",
+          stepFourBody: "Document how to run, inspect, and maintain the workflow.",
+          startEyebrow: "Start here",
+          startTitle: "Send one repeated task and one sample input.",
+          startBody: "The first audit decides whether the workflow is worth automating, what to prototype, and where human review must remain.",
+          startBox: "Use the discovery template:",
+          startButton: "Open discovery form"
+        }
+      };
+
+      function setLanguage(lang) {
+        document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
+        document.querySelectorAll("[data-i18n]").forEach((el) => {
+          el.textContent = copy[lang][el.dataset.i18n];
+        });
+        document.querySelectorAll(".lang-button").forEach((button) => {
+          button.classList.toggle("is-active", button.dataset.lang === lang);
+        });
+        localStorage.setItem("mimoFactoryLang", lang);
+      }
+
+      document.querySelectorAll(".lang-button").forEach((button) => {
+        button.addEventListener("click", () => setLanguage(button.dataset.lang));
+      });
+
+      setLanguage(localStorage.getItem("mimoFactoryLang") || "zh");
+    </script>
   </body>
 </html>
