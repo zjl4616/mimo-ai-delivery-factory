@@ -53,6 +53,7 @@ Why this first: it uses existing Obsidian materials, can be sold from a simple G
 - [docs/obsidian-logging.md](docs/obsidian-logging.md) - Obsidian process logging rule
 - [docs/operator-confirmation.md](docs/operator-confirmation.md) - what the operator must approve
 - [site/](site/) - static landing page
+- [product-lab/](product-lab/) - independently deliverable public-demand experiments
 - [scripts/](scripts/) - local helper scripts
 
 ## Compliance Boundary

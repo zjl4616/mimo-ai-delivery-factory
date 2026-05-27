@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI 自动化机会评分器</title>
+    <meta
+      name="description"
+      content="判断一个重复任务是否值得做 AI 自动化，并生成下一步原型建议。"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="intro">
+        <p class="eyebrow">Public demand experiment P01</p>
+        <h1>AI 自动化机会评分器</h1>
+        <p>
+          输入一个重复任务，快速判断它是否值得自动化。输出会给出适合度、人工复核点、
+          原型建议和 ROI 方向，适合小企业、运营、创作者和自由职业者先做内部判断。
+        </p>
+      </section>
+
+      <section class="workspace">
+        <form id="scoreForm" class="panel">
+          <label>
+            任务名称
+            <input id="taskName" value="客户询盘回复" />
+          </label>
+
+          <label>
+            任务描述
+            <textarea id="taskDesc">每天把客户询盘整理出来，查产品资料，写一版回复草稿，再人工确认后发送。</textarea>
+          </label>
+
+          <div class="grid">
+            <label>
+              每周发生次数
+              <input id="frequency" type="number" min="0" value="25" />
+            </label>
+            <label>
+              每次耗时分钟
+              <input id="minutes" type="number" min="0" value="18" />
+            </label>
+            <label>
+              人工时薪估算
+              <input id="hourly" type="number" min="0" value="60" />
+            </label>
+            <label>
+              错误成本评分 1-5
+              <input id="errorCost" type="number" min="1" max="5" value="3" />
+            </label>
+          </div>
+
+          <fieldset>
+            <legend>数据与流程条件</legend>
+            <label class="check"><input id="clearInput" type="checkbox" checked /> 输入数据清楚</label>
+            <label class="check"><input id="clearOutput" type="checkbox" checked /> 输出标准清楚</label>
+            <label class="check"><input id="humanReview" type="checkbox" checked /> 可以保留人工复核</label>
+            <label class="check"><input id="toolAccess" type="checkbox" checked /> 工具或表格可访问</label>
+            <label class="check"><input id="privacyRisk" type="checkbox" /> 涉及高隐私或高合规风险</label>
+          </fieldset>
+
+          <button type="submit">生成评分</button>
+        </form>
+
+        <section class="result" aria-live="polite">
+          <div class="score-card">
+            <span>适合度</span>
+            <strong id="scoreValue">--</strong>
+            <em id="scoreLabel">等待输入</em>
+          </div>
+          <div id="report" class="report">
+            填写左侧信息后生成自动化建议。
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script>
+      const form = document.querySelector("#scoreForm");
+      const scoreValue = document.querySelector("#scoreValue");
+      const scoreLabel = document.querySelector("#scoreLabel");
+      const report = document.querySelector("#report");
+
+      function checked(id) {
+        return document.querySelector(id).checked;
+      }
+
+      function value(id) {
+        return document.querySelector(id).value.trim();
+      }
+
+      function number(id) {
+        return Number(document.querySelector(id).value || 0);
+      }
+
+      function calculate(event) {
+        event.preventDefault();
+        const weeklyHours = (number("#frequency") * number("#minutes")) / 60;
+        const weeklyCost = weeklyHours * number("#hourly");
+        let score = 0;
+
+        score += Math.min(20, number("#frequency") * 0.8);
+        score += Math.min(20, weeklyHours * 2.5);
+        score += number("#errorCost") * 4;
+        score += checked("#clearInput") ? 12 : 0;
+        score += checked("#clearOutput") ? 12 : 0;
+        score += checked("#humanReview") ? 10 : -8;
+        score += checked("#toolAccess") ? 10 : -6;
+        score += checked("#privacyRisk") ? -18 : 0;
+        score = Math.max(0, Math.min(100, Math.round(score)));
+
+        let label = "暂不建议";
+        let next = "先整理流程和样本，不急着自动化。";
+        if (score >= 76) {
+          label = "强烈适合";
+          next = "建议做 3 天原型：输入采集、AI 草稿、人工复核、输出记录。";
+        } else if (score >= 56) {
+          label = "适合试点";
+          next = "建议做轻量原型，先用 5 个历史样本测试效果。";
+        } else if (score >= 36) {
+          label = "需要整理";
+          next = "先把输入、输出、审批标准和异常情况写清楚。";
+        }
+
+        scoreValue.textContent = score;
+        scoreLabel.textContent = label;
+        report.innerHTML = `
+          <h2>${value("#taskName") || "未命名任务"}</h2>
+          <p>${value("#taskDesc") || "暂无描述"}</p>
+          <dl>
+            <div><dt>每周耗时</dt><dd>${weeklyHours.toFixed(1)} 小时</dd></div>
+            <div><dt>每周人工成本</dt><dd>约 RMB ${Math.round(weeklyCost)}</dd></div>
+            <div><dt>建议下一步</dt><dd>${next}</dd></div>
+            <div><dt>必须保留</dt><dd>${checked("#humanReview") ? "人工复核，尤其是发给客户、报价、投诉、隐私内容。" : "先补一个人工复核点再做自动化。"}</dd></div>
+          </dl>
+          <h3>推荐原型结构</h3>
+          <ol>
+            <li>收集 5-10 个真实历史样本。</li>
+            <li>把输入字段整理到表格或 Markdown。</li>
+            <li>让 AI 只生成草稿或建议，不直接对外发送。</li>
+            <li>记录人工修改点，迭代提示词和规则。</li>
+          </ol>
+        `;
+      }
+
+      form.addEventListener("submit", calculate);
+      form.dispatchEvent(new Event("submit"));
+    </script>
+  </body>
+</html>
