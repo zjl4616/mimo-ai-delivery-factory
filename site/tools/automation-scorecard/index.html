@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AI 自动化机会评分器</title>
+    <title>AI 自动化机会评分器｜免费诊断</title>
     <meta
       name="description"
       content="判断一个重复任务是否值得做 AI 自动化，并生成下一步原型建议。"
@@ -17,7 +17,7 @@
         <h1>AI 自动化机会评分器</h1>
         <p>
           输入一个重复任务，快速判断它是否值得自动化。输出会给出适合度、人工复核点、
-          原型建议和 ROI 方向，适合小企业、运营、创作者和自由职业者先做内部判断。
+          原型建议和 ROI 方向。高分场景可直接进入「AI 自动化启动冲刺」服务。
         </p>
       </section>
 
@@ -61,7 +61,7 @@
             <label class="check"><input id="privacyRisk" type="checkbox" /> 涉及高隐私或高合规风险</label>
           </fieldset>
 
-          <button type="submit">生成评分</button>
+          <button type="submit">生成免费评分</button>
         </form>
 
         <section class="result" aria-live="polite">
@@ -85,20 +85,21 @@
             </div>
 
             <div class="cta-card">
-              <h3>公开协作：提交深度诊断请求</h3>
+              <h3>下一步：申请深度诊断</h3>
               <p class="muted">
-                你可以把“任务描述 + 现状数据”发到公开 GitHub Issue，我们会在同一线程中回复可执行的落地路线图（不私聊）。
+                如果评分 ≥70，建议提交公开诊断请求。我会在 Issue 中回复一份可执行路线图；如需私密/付费实施，可在 Issue 里只留非敏感摘要。
               </p>
-              <a id="publicIntakeLink" class="link-btn" href="#" target="_blank" rel="noreferrer">打开公开 Intake（GitHub Issue）</a>
-              <p class="fineprint">注意：请勿包含客户隐私、账号、密钥、合同等敏感信息。</p>
+              <a id="publicIntakeLink" class="link-btn" href="#" target="_blank" rel="noreferrer">提交公开诊断请求</a>
+              <a class="link-btn secondary-link" href="../../#start">查看服务页</a>
+              <p class="fineprint">注意：请勿包含客户隐私、账号、密钥、合同、API Key 等敏感信息。</p>
             </div>
 
-            <div class="cta-card is-disabled" aria-disabled="true">
-              <h3>付费深度诊断（需用户确认收款链接）</h3>
+            <div class="cta-card">
+              <h3>付费服务：AI 自动化启动冲刺</h3>
               <p class="muted">
-                该入口预留用于未来的“固定范围付费诊断/实施”服务。为避免误导，收款链接配置前不会启用。
+                固定范围服务：流程梳理、可运行原型、人工复核节点、交付文档。参考价 ¥1,999-4,999，具体以诊断后范围为准。
               </p>
-              <span class="disabled-pill">未配置</span>
+              <a class="link-btn" href="https://github.com/zjl4616/mimo-ai-delivery-factory/blob/main/offers/ai-automation-starter-sprint.md" target="_blank" rel="noreferrer">查看服务说明</a>
             </div>
           </div>
         </section>
