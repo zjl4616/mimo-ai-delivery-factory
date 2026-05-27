@@ -1,0 +1,40 @@
+﻿name: Redact n8n workflow JSON
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "**/*.json"
+      - ".github/workflows/n8n-redact.yml"
+
+jobs:
+  redact:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Detect workflow json files
+        id: detect
+        shell: bash
+        run: |
+          set -euo pipefail
+          files=$(git ls-files "**/*.json" | (grep -E "(workflow|n8n).*\.json$" || true))
+          echo "files<<EOF" >> $GITHUB_OUTPUT
+          echo "$files" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Redact in-place (best-effort)
+        if: steps.detect.outputs.files != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/n8n-workflow-redactor/redact.py --in-place ${{ steps.detect.outputs.files }}
+
+      - name: Show diff
+        if: steps.detect.outputs.files != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          git status --porcelain
+          git --no-pager diff --stat
+

@@ -5,53 +5,50 @@ Owner: automation (public-only)
 
 ## Problem statement (public)
 
-n8n troubleshooting threads often require posting workflow JSON to reproduce an issue. But exports commonly include sensitive or identifying information:
+n8n troubleshooting and collaboration frequently require posting workflow JSON to reproduce an issue. But exports (and/or node params) can contain sensitive or identifying information:
 
-- credentials references and auth headers
+- credential references (name/id), and sometimes hard-coded secrets in node parameters
+- auth headers / tokens / API keys accidentally pasted into nodes
 - webhook URLs (can be abused)
-- tokens / API keys / internal domains
-- emails / phone numbers / IDs embedded in node parameters
+- internal domains, emails / phone numbers / IDs embedded in fields
 
-Users are stuck between:
+Users get stuck between:
 
-1) oversharing (security/privacy risk), or  
+1) oversharing (security/privacy risk), or
 2) undersharing (helpers cannot reproduce)
 
-## Public demand signals (to collect URLs)
+## Public demand signals (verifiable URLs)
 
-This experiment explicitly needs linkable sources (public URLs) from:
+This experiment needs linkable public sources showing the pain is real.
 
-- community.n8n.io threads where people request workflow JSON
-- Reddit / HN-style threads about “can’t share workflow / contains secrets”
-- n8n docs that explain workflows export/share and credentials handling
+### n8n docs
 
-Add the exact URLs + 1–2 sentence notes below once confirmed.
+- https://docs.n8n.io/workflows/export-import/
+  - Note: official export docs mention a “remove credentials” option, implying sharing/export needs caution.
 
-### Sources
+### community.n8n.io / public posts (workflow JSON + credential leakage)
 
-1. TODO: n8n docs — export/share workflow JSON + credentials separation  
-   - URL: (add)  
-   - Note:
+- https://community.n8n.io/t/why-your-n8n-workflow-json-is-leaking-credentials-and-the-architectural-fix/289576
+  - Note: directly discusses workflow JSON leaking credentials/tokens in real-world sharing scenarios.
 
-2. TODO: n8n community thread — “please share your workflow JSON”  
-   - URL: (add)  
-   - Note:
+### Reddit discussions (anonymizing / redacting workflow JSON)
 
-3. TODO: Reddit r/n8n thread — workflow JSON sharing + secrets concern  
-   - URL: (add)  
-   - Note:
+- https://www.reddit.com/r/n8n/comments/1mkluki/anonymizing_n8n_workflow_json/
+  - Note: users discuss that exports can still include identifiers (credential IDs, sheet IDs, channels) and how to anonymize.
+- https://www.reddit.com/r/n8n/comments/1mthdfd/i_built_a_tool_to_clean_sensitive_data_from_n8n/
+  - Note: existence of a similar tool is proof the demand exists; we differentiate via report + help template + review offer.
 
 ## Our response (deliverable assets)
 
 - Offline tool: `site/tools/n8n-workflow-redactor/`
-- Landing offer: `site/offers/p02-n8n-security-review/`
-- Public intake: GitHub Issue template `p02-n8n-workflow-review.yml`
+- Optional service offer: `site/offers/p02-n8n-security-review/`
+- Public intake: GitHub Issue template `p02-n8n-workflow-review.yml` (sanitized JSON + repro details)
 
 ## Next action (public-only, needs operator confirmation)
 
 Post once on ONE platform (n8n Community / Reddit r/n8n / Show HN) with:
 
-- the tool link
-- the “manual review / no 100% safety” disclaimer
-- optional CTA to the review offer
+- tool link
+- “manual review / no 100% safety” disclaimer
+- optional CTA to the review offer + GitHub issue intake
 
