@@ -1,5 +1,5 @@
 ﻿{
-  "generatedAt": "2026-05-28T02:01:55+08:00",
+  "generatedAt": "2026-05-28T02:08:08+08:00",
   "project": {
     "name": "MiMo Token-To-Cash 30 天增长实验",
     "goal": "让 MiMo 在 30 天内持续产出可交付产品、推广素材和销售资产，验证付款闭环。",
@@ -10,8 +10,8 @@
   "health": {
     "status": "healthy",
     "label": "运行正常",
-    "latestRunAt": "2026-05-28T02:00:45+08:00",
-    "latestRunAgeMinutes": 1.2,
+    "latestRunAt": "2026-05-28T02:02:29+08:00",
+    "latestRunAgeMinutes": 5.6,
     "cron": "*/30 * * * * server_loop.py",
     "cronLogBytes": 0,
     "serverLogBytes": 0
@@ -20,12 +20,12 @@
     "productsTotal": 7,
     "productsOnline": 4,
     "productsBuilding": 2,
-    "serverRuns": 13,
+    "serverRuns": 14,
     "promotionState": "素材已生成，尚未确认真实外部发布记录",
     "revenueState": "暂无付款记录",
     "git": {
       "branch": "main",
-      "head": "77631c4"
+      "head": "cce5aeb"
     }
   },
   "products": [
@@ -120,9 +120,9 @@
   ],
   "recentRuns": [
     {
-      "file": "20260528-020045-本轮输出-P08-CLI脱敏器与GitHubAction.md",
-      "updatedAt": "2026-05-28T02:00:45+08:00",
-      "title": "What I did",
+      "file": "20260528-020241-本轮输出-P07需求证据与外联执行包.md",
+      "updatedAt": "2026-05-28T02:02:29+08:00",
+      "title": "What changed",
       "choice": "",
       "paymentReady": "none"
     },
@@ -130,6 +130,13 @@
       "file": "20260528-015851-MiMo后台工厂输出.md",
       "updatedAt": "2026-05-28T01:59:44+08:00",
       "title": "P07 n8n 工作流 JSON 脱敏器：公开平台发布行动包",
+      "choice": "",
+      "paymentReady": "none"
+    },
+    {
+      "file": "20260528-020045-本轮输出-P08-CLI脱敏器与GitHubAction.md",
+      "updatedAt": "2026-05-28T01:59:17+08:00",
+      "title": "What I did",
       "choice": "",
       "paymentReady": "none"
     },
@@ -144,13 +151,6 @@
       "file": "20260528-012300-本轮输出-P07脱敏器外联资产.md",
       "updatedAt": "2026-05-28T01:22:33+08:00",
       "title": "本轮最高杠杆动作",
-      "choice": "",
-      "paymentReady": "none"
-    },
-    {
-      "file": "20260528-010847-MiMo后台工厂输出.md",
-      "updatedAt": "2026-05-28T01:08:51+08:00",
-      "title": "未识别标题",
       "choice": "",
       "paymentReady": "none"
     }
