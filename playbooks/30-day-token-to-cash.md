@@ -13,6 +13,7 @@ Do not try to consume tokens. Convert model capacity into proof, trust, and fixe
 - write 2 public case studies
 - create 1 lead magnet checklist
 - prepare 3 outreach scripts
+- publish the server landing page and keep GitHub Pages as a backup
 
 Goal: make it easy for a stranger to understand what you sell.
 

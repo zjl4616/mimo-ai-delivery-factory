@@ -47,6 +47,7 @@ Why this first: it uses existing Obsidian materials, can be sold from a simple G
 - [playbooks/lead-generation-plan.md](playbooks/lead-generation-plan.md) - daily lead sourcing and scoring plan
 - [case-studies/](case-studies/) - sanitized public cases
 - [docs/](docs/) - operating notes and compliance boundaries
+- [docs/device-utilization.md](docs/device-utilization.md) - local, server, NAS, and Mac usage plan
 - [site/](site/) - static landing page
 - [scripts/](scripts/) - local helper scripts
 

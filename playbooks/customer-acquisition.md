@@ -100,3 +100,9 @@ I can turn this into a 3-day starter sprint proposal.
 - proposal sent
 - next follow-up date
 - status
+
+## Agent Communication Boundary
+
+I can draft and send low-risk outreach, follow-up questions, scorecards, proposal drafts, delivery updates, and handoff messages.
+
+Pause for human confirmation before final pricing, payment terms, contract acceptance, real customer claims, testimonials, publishing private data, or any promise that creates legal or financial obligations.
