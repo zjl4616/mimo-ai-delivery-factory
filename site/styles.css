@@ -1,0 +1,478 @@
+:root {
+  color-scheme: light;
+  --ink: #141414;
+  --muted: #5f625f;
+  --line: #d8d8d0;
+  --paper: #fbfaf4;
+  --soft: #efeee6;
+  --field: #ffffff;
+  --accent: #19664a;
+  --accent-2: #cc4b24;
+  --gold: #b7802c;
+  --shadow: 0 18px 60px rgba(32, 32, 24, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  color: var(--ink);
+  background:
+    linear-gradient(90deg, rgba(20, 20, 20, 0.035) 1px, transparent 1px),
+    linear-gradient(rgba(20, 20, 20, 0.035) 1px, transparent 1px),
+    var(--paper);
+  background-size: 32px 32px;
+}
+
+a {
+  color: inherit;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 64px;
+  padding: 12px clamp(18px, 4vw, 56px);
+  border-bottom: 1px solid var(--line);
+  background: rgba(251, 250, 244, 0.92);
+  backdrop-filter: blur(12px);
+}
+
+.brand,
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand {
+  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.brand-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  color: white;
+  background: var(--ink);
+  font-size: 13px;
+}
+
+.nav {
+  gap: clamp(12px, 3vw, 28px);
+  font-family: "Trebuchet MS", Verdana, sans-serif;
+  font-size: 14px;
+}
+
+.nav a {
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.75fr);
+  gap: clamp(28px, 5vw, 72px);
+  align-items: center;
+  min-height: calc(100vh - 64px);
+  padding: clamp(46px, 7vw, 96px) clamp(18px, 4vw, 56px) clamp(38px, 5vw, 72px);
+}
+
+.hero-copy {
+  max-width: 820px;
+}
+
+.eyebrow {
+  margin: 0 0 16px;
+  color: var(--accent-2);
+  font-family: "Trebuchet MS", Verdana, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+h3,
+p {
+  letter-spacing: 0;
+}
+
+h1 {
+  margin: 0;
+  max-width: 760px;
+  font-size: clamp(52px, 8vw, 116px);
+  line-height: 0.93;
+  font-weight: 700;
+}
+
+h2 {
+  margin: 0;
+  font-size: clamp(32px, 5vw, 58px);
+  line-height: 1;
+}
+
+h3 {
+  margin: 0;
+  font-size: 24px;
+  line-height: 1.1;
+}
+
+.lede {
+  max-width: 680px;
+  margin: 26px 0 0;
+  color: var(--muted);
+  font-family: "Trebuchet MS", Verdana, sans-serif;
+  font-size: clamp(18px, 2vw, 22px);
+  line-height: 1.55;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 18px;
+  border: 1px solid var(--ink);
+  text-decoration: none;
+  font-family: "Trebuchet MS", Verdana, sans-serif;
+  font-weight: 700;
+}
+
+.button.primary {
+  color: white;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.button.secondary {
+  background: transparent;
+}
+
+.hero-panel {
+  padding: 22px;
+  background: var(--field);
+  border: 1px solid var(--ink);
+  box-shadow: var(--shadow);
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+  font-family: "Trebuchet MS", Verdana, sans-serif;
+}
+
+.panel-head strong {
+  color: var(--accent);
+}
+
+.score-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  margin: 18px 0;
+  background: var(--line);
+}
+
+.score-grid div {
+  min-height: 92px;
+  padding: 16px;
+  background: var(--field);
+}
+
+.score-grid dt {
+  color: var(--muted);
+  font-family: "Trebuchet MS", Verdana, sans-serif;
+  font-size: 13px;
+}
+
+.score-grid dd {
+  margin: 8px 0 0;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.flow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  font-family: "Trebuchet MS", Verdana, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.flow span {
+  min-height: 42px;
+  display: grid;
+  place-items: center;
+  color: white;
+  background: var(--ink);
+}
+
+.band {
+  margin: 0 clamp(18px, 4vw, 56px);
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  background: rgba(255, 255, 255, 0.42);
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.metrics div {
+  min-height: 112px;
+  padding: 22px;
+  border-right: 1px solid var(--line);
+}
+
+.metrics div:last-child {
+  border-right: 0;
+}
+
+.metrics strong {
+  display: block;
+  font-size: 28px;
+}
+
+.metrics span {
+  display: block;
+  margin-top: 8px;
+  color: var(--muted);
+  font-family: "Trebuchet MS", Verdana, sans-serif;
+}
+
+.section {
+  padding: clamp(54px, 8vw, 110px) clamp(18px, 4vw, 56px);
+}
+
+.section.muted {
+  background: var(--soft);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.section-head {
+  max-width: 760px;
+  margin-bottom: 30px;
+}
+
+.offer-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.offer {
+  padding: 26px;
+  background: var(--field);
+  border: 1px solid var(--ink);
+}
+
+.offer-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-start;
+}
+
+.offer-title span {
+  flex: 0 0 auto;
+  color: var(--gold);
+  font-family: "Trebuchet MS", Verdana, sans-serif;
+  font-weight: 700;
+}
+
+.offer p,
+.start p {
+  color: var(--muted);
+  font-family: "Trebuchet MS", Verdana, sans-serif;
+  line-height: 1.6;
+}
+
+.offer ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding: 0;
+  margin: 24px 0 0;
+  list-style: none;
+  font-family: "Trebuchet MS", Verdana, sans-serif;
+}
+
+.offer li {
+  padding: 10px 12px;
+  background: var(--soft);
+  border-left: 3px solid var(--accent);
+}
+
+.case-list {
+  display: grid;
+  gap: 12px;
+}
+
+.case-list a {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 18px;
+  padding: 22px 0;
+  border-top: 1px solid var(--line);
+  text-decoration: none;
+}
+
+.case-list a:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.case-list strong {
+  font-size: 22px;
+}
+
+.case-list span {
+  color: var(--muted);
+  font-family: "Trebuchet MS", Verdana, sans-serif;
+  line-height: 1.5;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  padding: 0;
+  margin: 0;
+  background: var(--line);
+  list-style: none;
+  counter-reset: steps;
+}
+
+.steps li {
+  min-height: 220px;
+  padding: 24px;
+  background: var(--field);
+  counter-increment: steps;
+}
+
+.steps li::before {
+  content: "0" counter(steps);
+  display: block;
+  margin-bottom: 48px;
+  color: var(--accent-2);
+  font-family: "Trebuchet MS", Verdana, sans-serif;
+  font-weight: 700;
+}
+
+.steps strong,
+.steps span {
+  display: block;
+}
+
+.steps strong {
+  font-size: 26px;
+}
+
+.steps span {
+  margin-top: 12px;
+  color: var(--muted);
+  font-family: "Trebuchet MS", Verdana, sans-serif;
+  line-height: 1.5;
+}
+
+.start {
+  display: grid;
+  grid-template-columns: 1fr minmax(280px, 420px);
+  gap: 28px;
+  align-items: center;
+  background: var(--ink);
+  color: white;
+}
+
+.start .eyebrow,
+.start p {
+  color: #dedbd0;
+}
+
+.start-box {
+  padding: 24px;
+  background: #24241f;
+  border: 1px solid #5a574c;
+}
+
+@media (max-width: 900px) {
+  .topbar,
+  .hero,
+  .start {
+    display: block;
+  }
+
+  .nav {
+    margin-top: 12px;
+    justify-content: space-between;
+  }
+
+  .hero-panel,
+  .start-box {
+    margin-top: 28px;
+  }
+
+  .metrics,
+  .offer-grid,
+  .steps {
+    grid-template-columns: 1fr;
+  }
+
+  .metrics div {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .metrics div:last-child {
+    border-bottom: 0;
+  }
+
+  .case-list a {
+    grid-template-columns: 1fr;
+  }
+
+  .offer-title {
+    display: block;
+  }
+}
+
+@media (max-width: 560px) {
+  h1 {
+    font-size: 48px;
+  }
+
+  .score-grid,
+  .flow,
+  .offer ul {
+    grid-template-columns: 1fr;
+  }
+}
