@@ -43,6 +43,8 @@ Why this first: it uses existing Obsidian materials, can be sold from a simple G
 - [offers/](offers/) - service packages and pricing
 - [templates/](templates/) - discovery, PRD, proposal, and handoff templates
 - [playbooks/](playbooks/) - step-by-step delivery workflows
+- [playbooks/client-communication-sop.md](playbooks/client-communication-sop.md) - customer-message boundaries and scripts
+- [playbooks/lead-generation-plan.md](playbooks/lead-generation-plan.md) - daily lead sourcing and scoring plan
 - [case-studies/](case-studies/) - sanitized public cases
 - [docs/](docs/) - operating notes and compliance boundaries
 - [site/](site/) - static landing page
