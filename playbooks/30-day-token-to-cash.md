@@ -6,6 +6,18 @@ Window: 2026-05-27 to 2026-06-27.
 
 Do not try to consume tokens. Convert model capacity into proof, trust, and fixed-scope paid work.
 
+The system should run hourly. The operator only confirms irreversible actions such as final pricing, payments, contracts, private customer claims, or personal-account sending.
+
+## Active Experiment Routes
+
+| Route | First success signal | Scale action |
+|---|---|---|
+| AI automation starter sprint | two qualified replies from ten messages | send more targeted outreach and draft proposals |
+| AI coding workflow setup | one repo audit request | create a paid setup offer and public checklist |
+| content repurposing workflow | one creator sends source content | create before-after demo and proposal |
+| inquiry reply automation | one real inquiry sample | create fixed package for sellers |
+| maintenance retainer | one completed sprint | offer monthly monitoring |
+
 ## Week 1: Publish Proof
 
 - publish this GitHub repository

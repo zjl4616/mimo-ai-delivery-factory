@@ -45,9 +45,13 @@ Why this first: it uses existing Obsidian materials, can be sold from a simple G
 - [playbooks/](playbooks/) - step-by-step delivery workflows
 - [playbooks/client-communication-sop.md](playbooks/client-communication-sop.md) - customer-message boundaries and scripts
 - [playbooks/lead-generation-plan.md](playbooks/lead-generation-plan.md) - daily lead sourcing and scoring plan
+- [playbooks/24h-growth-loop.md](playbooks/24h-growth-loop.md) - hourly MiMo growth loop
+- [experiments/experiment-board.md](experiments/experiment-board.md) - route testing and scale decisions
 - [case-studies/](case-studies/) - sanitized public cases
 - [docs/](docs/) - operating notes and compliance boundaries
 - [docs/device-utilization.md](docs/device-utilization.md) - local, server, NAS, and Mac usage plan
+- [docs/obsidian-logging.md](docs/obsidian-logging.md) - Obsidian process logging rule
+- [docs/operator-confirmation.md](docs/operator-confirmation.md) - what the operator must approve
 - [site/](site/) - static landing page
 - [scripts/](scripts/) - local helper scripts
 
