@@ -52,6 +52,7 @@ Why this first: it uses existing Obsidian materials, can be sold from a simple G
 - [docs/device-utilization.md](docs/device-utilization.md) - local, server, NAS, and Mac usage plan
 - [docs/obsidian-logging.md](docs/obsidian-logging.md) - Obsidian process logging rule
 - [docs/operator-confirmation.md](docs/operator-confirmation.md) - what the operator must approve
+- [docs/background-loop.md](docs/background-loop.md) - Windows scheduled MiMo background loop
 - [site/](site/) - static landing page
 - [product-lab/](product-lab/) - independently deliverable public-demand experiments
 - [scripts/](scripts/) - local helper scripts
