@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
@@ -20,7 +20,7 @@
         <a href="#offers" data-i18n="navOffers">服务</a>
         <a href="#cases" data-i18n="navCases">案例</a>
         <a href="#process" data-i18n="navProcess">流程</a>
-        <a href="/mimo-ai-delivery-factory/dashboard/" data-i18n="navDashboard">面板</a>
+        <a href="./dashboard/" data-i18n="navDashboard">面板</a>
         <a href="#start" data-i18n="navStart">开始</a>
         <div class="lang-switch" aria-label="Language switch">
           <button class="lang-button is-active" type="button" data-lang="zh">中文</button>
@@ -111,6 +111,20 @@
               <li data-i18n="offerTwoItemD">创始人构建冲刺</li>
             </ul>
           </article>
+          <article class="offer">
+            <div class="offer-title">
+              <h3 data-i18n="offerThreeTitle">n8n 工作流安全与可靠性审查</h3>
+              <span data-i18n="offerThreePrice">免费公开 Mini-Review / 付费深度审查</span>
+            </div>
+            <p data-i18n="offerThreeBody">离线+脱敏协作；给出风险清单和改造建议。</p>
+            <ul>
+              <li data-i18n="offerThreeItemA">脱敏检查清单</li>
+              <li data-i18n="offerThreeItemB">可靠性改造建议</li>
+              <li data-i18n="offerThreeItemC">可选：补丁版工作流 JSON</li>
+              <li data-i18n="offerThreeItemD">交付模板与报告</li>
+            </ul>
+            <a class="button tertiary" href="./offers/p02-n8n-security-review/" data-i18n="offerThreeLink">查看详情</a>
+          </article>
         </div>
       </section>
 
@@ -158,6 +172,36 @@
             <span data-i18n="stepFourBody">写清如何运行、检查和维护这个流程。</span>
           </li>
         </ol>
+      </section>
+
+      <section class="band" id="tools" aria-label="Tools">
+        <div class="section-head">
+          <p class="eyebrow">Tools</p>
+          <h2>免费工具</h2>
+          <p>用于公开需求验证与引流：不需要账号，不收集你的数据。</p>
+        </div>
+        <div class="cards">
+          <a class="card" href="./tools/automation-scorecard/">
+            <strong>P01 自动化机会评分器</strong>
+            <span>判断一个重复任务是否值得自动化，并给出下一步原型建议。</span>
+          </a>
+          <a class="card" href="./tools/n8n-json-explainer/">
+            <strong>P02 n8n JSON 中文解释器</strong>
+            <span>粘贴/上传工作流 JSON，生成中文可读的节点说明、连接关系、风险点与改造建议。</span>
+          </a>
+          <a class="card" href="./tools/n8n-expression-triage/">
+            <strong>P06 n8n Expression 报错排查（离线）</strong>
+            <span>只粘贴报错 + 表达式片段，给出 Top 5 原因与修复建议，并生成可公开求助的脱敏模板。</span>
+          </a>
+          <a class="card" href="./tools/n8n-workflow-redactor/">
+            <strong>P07 n8n Workflow JSON 脱敏器（离线）</strong>
+            <span>脱敏 credentials/token/webhook URL/email/phone 等敏感字段，生成脱敏报告与公开求助帖模板。</span>
+          </a>
+          <a class="card" href="./dashboard/">
+            <strong>项目运行面板</strong>
+            <span>查看实验进度、最近产出和确认队列（不含密钥）。</span>
+          </a>
+        </div>
       </section>
 
       <section id="start" class="section start">
@@ -224,6 +268,14 @@
           offerTwoItemB: "PRD/设计/技术模板",
           offerTwoItemC: "评审清单",
           offerTwoItemD: "创始人构建冲刺",
+          offerThreeTitle: "n8n 工作流安全与可靠性审查",
+          offerThreePrice: "免费公开 Mini-Review / 付费深度审查",
+          offerThreeBody: "离线+脱敏协作；给出风险清单和改造建议。",
+          offerThreeItemA: "脱敏检查清单",
+          offerThreeItemB: "可靠性改造建议",
+          offerThreeItemC: "可选：补丁版工作流 JSON",
+          offerThreeItemD: "交付模板与报告",
+          offerThreeLink: "查看详情",
           casesEyebrow: "可复用案例",
           casesTitle: "这些场景可以马上改造成客户方案。",
           caseOneTitle: "询盘回复自动化",
@@ -298,6 +350,14 @@
           offerTwoItemB: "PRD/design/tech templates",
           offerTwoItemC: "Review checklist",
           offerTwoItemD: "Founder build sprint option",
+          offerThreeTitle: "n8n Workflow Security & Reliability Review",
+          offerThreePrice: "Free Public Mini-Review / Paid Deep Review",
+          offerThreeBody: "Offline + anonymized collaboration; deliver risk checklist and improvement suggestions.",
+          offerThreeItemA: "Sanitization checklist",
+          offerThreeItemB: "Reliability improvements",
+          offerThreeItemC: "Optional: patched workflow JSON",
+          offerThreeItemD: "Delivery template & report",
+          offerThreeLink: "View details",
           casesEyebrow: "Reusable cases",
           casesTitle: "Case patterns ready to adapt.",
           caseOneTitle: "Inquiry reply automation",

@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Create a sanitized public status snapshot for the MiMo project dashboard."""
+"""Create a sanitized public status snapshot for the MiMo project dashboard.
+
+This file is intentionally safe for public publishing:
+- No API keys
+- No private client data
+- No private contacts
+"""
 
 from __future__ import annotations
 
@@ -33,11 +39,11 @@ PRODUCTS = [
         "id": "P02",
         "name": "n8n JSON 中文解释器",
         "channel": "GitHub / n8n 社区搜索流量",
-        "status": "building",
-        "stage": "构建中",
-        "progress": 28,
-        "url": "",
-        "next": "做脚本、示例 JSON 和网页 Demo。",
+        "status": "online",
+        "stage": "已上线",
+        "progress": 85,
+        "url": "https://1993921.xyz/mimo-ai-delivery-factory/tools/n8n-json-explainer/",
+        "next": "在公开渠道发布并用 Issue intake 收集真实样本。",
     },
     {
         "id": "P03",
@@ -47,7 +53,7 @@ PRODUCTS = [
         "stage": "待构建",
         "progress": 8,
         "url": "",
-        "next": "做英文询盘和中文客服双场景 demo。",
+        "next": "做英文询盘与中文客服双场景 demo。",
     },
     {
         "id": "P04",
@@ -57,7 +63,7 @@ PRODUCTS = [
         "stage": "待并入 P01",
         "progress": 12,
         "url": "",
-        "next": "并入 P01 报告导出和报价前说明。",
+        "next": "并入 P01 报告导出与报价前说明。",
     },
     {
         "id": "P05",
@@ -68,6 +74,26 @@ PRODUCTS = [
         "progress": 5,
         "url": "",
         "next": "先做免费版 5 个模板。",
+    },
+    {
+        "id": "P06",
+        "name": "n8n Expression 报错排查助手（离线）",
+        "channel": "n8n 社区 / Reddit / GitHub（公开求助）",
+        "status": "online",
+        "stage": "已上线",
+        "progress": 55,
+        "url": "https://1993921.xyz/mimo-ai-delivery-factory/tools/n8n-expression-triage/",
+        "next": "用 3-5 条公开回复把用户引导到脱敏模板 + GitHub Issue intake。",
+    },
+    {
+        "id": "P07",
+        "name": "n8n workflow JSON 脱敏器（离线）",
+        "channel": "n8n 社区 / Reddit / GitHub（公开求助）",
+        "status": "online",
+        "stage": "已上线",
+        "progress": 65,
+        "url": "https://1993921.xyz/mimo-ai-delivery-factory/tools/n8n-workflow-redactor/",
+        "next": "在公开渠道发布 1 条主贴 + 3-5 条回复引流，收集 ≥1 个脱敏样本到 Issue intake。",
     },
 ]
 
@@ -110,17 +136,6 @@ def status_from_age(minutes: float | None) -> str:
     return "stale"
 
 
-def extract_heading(text: str) -> str:
-    for line in text.splitlines():
-        stripped = line.strip()
-        if stripped.startswith("#") and not re.match(r"^#+\s*\d+\.", stripped):
-            return stripped.lstrip("#").strip()[:120]
-    choice = extract_section(text, "本轮选择") or extract_section(text, "This run's choice")
-    if choice:
-        return choice[:120]
-    return "未识别标题"
-
-
 def extract_section(text: str, title: str) -> str:
     pattern = re.compile(rf"^#+\s*(?:\d+\.\s*)?{re.escape(title)}\s*$", re.MULTILINE | re.IGNORECASE)
     match = pattern.search(text)
@@ -130,6 +145,17 @@ def extract_section(text: str, title: str) -> str:
     next_heading = re.search(r"^#+\s+", rest, re.MULTILINE)
     section = rest[: next_heading.start()] if next_heading else rest
     return " ".join(line.strip(" -*\t") for line in section.splitlines() if line.strip())[:220]
+
+
+def extract_heading(text: str) -> str:
+    for line in text.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("#") and not re.match(r"^#+\s*\d+\.", stripped):
+            return stripped.lstrip("#").strip()[:120]
+    choice = extract_section(text, "本轮选择") or extract_section(text, "This run's choice")
+    if choice:
+        return choice[:120]
+    return "未识别标题"
 
 
 def recent_runs(runs_dir: Path, limit: int = 5) -> list[dict[str, object]]:
@@ -144,15 +170,14 @@ def recent_runs(runs_dir: Path, limit: int = 5) -> list[dict[str, object]]:
                 "title": extract_heading(text),
                 "choice": extract_section(text, "本轮选择") or extract_section(text, "This run's choice"),
                 "paymentReady": extract_section(text, "PAYMENT_READY") or "none",
-                "needsUserConfirmation": extract_section(text, "NEEDS_USER_CONFIRMATION") or "none",
             }
         )
     return runs
 
 
 def public_metrics(repo: Path, runs_dir: Path) -> dict[str, object]:
-    online = sum(1 for p in PRODUCTS if p["status"] == "online")
-    building = sum(1 for p in PRODUCTS if p["status"] == "building")
+    online = sum(1 for p in PRODUCTS if p.get("status") == "online")
+    building = sum(1 for p in PRODUCTS if p.get("status") in {"building", "queued"})
     run_count = len(list(runs_dir.glob("*.md"))) if runs_dir.exists() else 0
     git_head = command_output(["git", "rev-parse", "--short", "HEAD"], repo)
     git_branch = command_output(["git", "branch", "--show-current"], repo)
@@ -180,7 +205,7 @@ def build_snapshot(base: Path, repo: Path, runs_dir: Path, logs_dir: Path) -> di
     server_log = logs_dir / "server-loop.log"
     health = status_from_age(age_minutes)
 
-    return {
+    snapshot: dict[str, object] = {
         "generatedAt": now.isoformat(timespec="seconds"),
         "project": {
             "name": "MiMo Token-To-Cash 30 天增长实验",
@@ -204,7 +229,7 @@ def build_snapshot(base: Path, repo: Path, runs_dir: Path, logs_dir: Path) -> di
             "status": "ready_not_published",
             "label": "推广素材已准备，尚未记录正式外发",
             "nextChannels": ["GitHub README", "n8n 相关公开讨论", "技术社区长文", "SEO 页面"],
-            "nextAction": "先发布 P01 工具介绍，再用 P02 承接 n8n 模板搜索需求。",
+            "nextAction": "先发布 P02（离线+脱敏+Issue intake），用公开回复求助帖获取样本。",
         },
         "confirmationQueue": [
             {
@@ -221,6 +246,34 @@ def build_snapshot(base: Path, repo: Path, runs_dir: Path, logs_dir: Path) -> di
         },
     }
 
+    artifacts = []
+    artifact_paths = [
+        "docs/p02-public-workflow-review-service.md",
+        "templates/p02-review-report-template.md",
+        "content/public/2026-05-27-p02-workflow-review-replies.md",
+        "content/public/2026-05-27-p02-sanitize-safety-post-and-replies.md",
+        "content/public/2026-05-28-p07-n8n-workflow-json-redactor-post-pack.md",
+        "leads/public/2026-05-27/p02-issue-tracker.md",
+        "leads/public/2026-05-27-public-target-list.md",
+        "leads/public/2026-05-28/p07-n8n-redaction-demand.md",
+        "experiments/2026-05-28/p07-offline-workflow-json-redactor.md",
+        "site/tools/n8n-workflow-redactor/index.html",
+    ]
+    for rel in artifact_paths:
+        p = repo / rel
+        if p.exists():
+            artifacts.append(rel)
+    if artifacts:
+        snapshot["runArtifacts"] = [
+            {
+                "id": "P02_REVIEW_KIT",
+                "title": "P02 public workflow review kit (docs + report template + reply scripts)",
+                "paths": artifacts,
+            }
+        ]
+
+    return snapshot
+
 
 def main() -> None:
     parser = argparse.ArgumentParser()
@@ -231,9 +284,26 @@ def main() -> None:
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
 
-    snapshot = build_snapshot(args.base, args.repo, args.runs, args.logs)
+    # When run locally, default env vars may point to a non-existent Linux path.
+    # If the default path isn't available, fall back to the current working directory.
+    cwd = Path.cwd()
+    base = args.base
+    repo = args.repo
+    runs_dir = args.runs
+    logs_dir = args.logs
+    if str(base) == str(DEFAULT_BASE) and not base.exists():
+        base = cwd
+    if str(repo) == str(DEFAULT_REPO) and not repo.exists():
+        repo = cwd
+    if str(runs_dir) == str(DEFAULT_RUNS) and not runs_dir.exists():
+        runs_dir = cwd / "generated" / "runs"
+    if str(logs_dir) == str(DEFAULT_LOGS) and not logs_dir.exists():
+        logs_dir = cwd / "logs"
+
+    snapshot = build_snapshot(base, repo, runs_dir, logs_dir)
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(snapshot, ensure_ascii=False, indent=2), encoding="utf-8")
+    # Write UTF-8 with BOM so Windows PowerShell `Get-Content` renders Chinese correctly.
+    args.output.write_text(json.dumps(snapshot, ensure_ascii=False, indent=2), encoding="utf-8-sig")
     print(f"wrote {args.output}")
 
 

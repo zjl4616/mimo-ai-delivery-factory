@@ -1,0 +1,86 @@
+﻿name: "[P01] automation audit request (public)"
+description: "Public automation audit request based on the P01 scorecard output. Please do not post private data."
+title: "[P01] automation audit: <task name>"
+labels: ["p01", "automation", "public-lead"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for trying **P01 AI 自动化机会评分器**.
+
+        Important:
+        - This is a **public** issue. Do **not** paste credentials/tokens/PII, customer names, invoices, contracts, internal URLs, etc.
+        - We can reply with: a checklist + a phased implementation plan + risks + testing steps.
+        - We do **not** promise ROI or revenue.
+
+  - type: input
+    id: who
+    attributes:
+      label: Role / context
+      description: "Who are you and what business context is this for?"
+      placeholder: "e.g. small business owner, operations lead, creator"
+    validations:
+      required: true
+
+  - type: input
+    id: task_name
+    attributes:
+      label: Task name
+      placeholder: "e.g. Reply to inbound customer inquiries"
+    validations:
+      required: true
+
+  - type: textarea
+    id: task_desc
+    attributes:
+      label: Task description
+      description: "Describe the current steps. Keep it general; avoid sensitive details."
+      placeholder: "Step-by-step, inputs, outputs, edge cases"
+    validations:
+      required: true
+
+  - type: textarea
+    id: volume
+    attributes:
+      label: Volume / effort
+      description: "Rough numbers for frequency, time, cost."
+      placeholder: |
+        - weekly frequency: 25
+        - minutes per run: 18
+        - hourly cost (RMB/USD): 60 RMB
+    validations:
+      required: true
+
+  - type: dropdown
+    id: tools
+    attributes:
+      label: Tools you use
+      options:
+        - "Spreadsheets (Google Sheets / Excel)"
+        - "Notion / Airtable"
+        - "CRM (HubSpot / Salesforce)"
+        - "Email (Gmail / Outlook)"
+        - "Messaging (Slack / Teams)"
+        - "n8n / Zapier / Make"
+        - "Other (describe below)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints
+      description: "Compliance, data residency, must-use tools, budget limits."
+      placeholder: "e.g. must stay in EU, cannot send data to 3rd party, no paid tools"
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety checklist
+      options:
+        - label: "I confirmed this issue contains no credentials/tokens/PII."
+          required: true
+        - label: "I understand this issue is public and indexed."
+          required: true

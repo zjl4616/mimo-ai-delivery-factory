@@ -1,0 +1,688 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>n8n JSON 中文解释器</title>
+    <meta
+      name="description"
+      content="把 n8n workflow JSON 转成可读的中文说明、流程概览与风险提示（纯前端，本地处理）。"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="intro">
+        <p class="eyebrow">Public demand experiment P02</p>
+        <h1>n8n JSON 中文解释器</h1>
+        <p class="lede">
+          粘贴或导入 n8n 工作流 JSON，本工具会在浏览器本地生成：节点中文解释、简化流程概览与风险点清单。无需联网，无需后端。
+        </p>
+      </header>
+
+      <section class="grid">
+        <section class="panel">
+          <div class="panel-head">
+            <h2>输入</h2>
+            <div class="panel-actions">
+              <button id="loadExampleBtn" type="button">加载示例</button>
+              <button id="clearBtn" type="button" class="secondary">清空</button>
+            </div>
+          </div>
+
+          <label class="label">
+            n8n workflow JSON
+            <textarea
+              id="jsonInput"
+              spellcheck="false"
+              placeholder="粘贴 n8n 导出的 workflow JSON（建议先移除敏感信息/凭证）。"
+            ></textarea>
+          </label>
+
+          <div class="row">
+            <label class="file">
+              <input id="fileInput" type="file" accept=".json,application/json" />
+              <span>选择本地 .json 文件</span>
+            </label>
+            <button id="analyzeBtn" type="button" class="primary">生成中文解释</button>
+          </div>
+
+          <details class="disclaimer">
+            <summary>公开协作：一键脱敏（推荐）</summary>
+            <p class="muted">
+              如果你希望把 workflow JSON 发到公开渠道（Reddit / GitHub Issue）让别人帮你 review，请先脱敏。此功能在浏览器本地运行，不上传数据。
+            </p>
+            <div class="row">
+              <button id="sanitizeBtn" type="button" class="secondary">生成脱敏 JSON</button>
+              <button id="copySanitizedBtn" type="button" class="secondary" disabled>复制脱敏 JSON</button>
+            </div>
+            <label class="label">
+              脱敏后的 workflow JSON（可公开粘贴）
+              <textarea id="sanitizedOutput" spellcheck="false" readonly placeholder="点击“生成脱敏 JSON”后在这里输出"></textarea>
+            </label>
+            <p class="muted">
+              公开协作入口（GitHub Issue 模板）：<a id="githubIssueLink" href="#" target="_blank" rel="noreferrer">打开 Issue 模板</a>
+            </p>
+          </details>
+
+          <details class="disclaimer" open>
+            <summary>免责声明（更保守）</summary>
+            <ul>
+              <li>本工具为第三方独立工具，非 n8n 官方产品，不代表 n8n 立场或承诺。</li>
+              <li>输出仅用于辅助理解，可能不准确/不完整/过时；最终以原始 JSON 与 n8n 官方文档为准。</li>
+              <li>请勿粘贴包含明文密钥、token、客户隐私的数据；建议先做脱敏。</li>
+            </ul>
+          </details>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <h2>输出</h2>
+            <div class="panel-actions">
+              <button id="copyMarkdownBtn" type="button" class="secondary" disabled>复制 Markdown</button>
+              <button id="downloadMarkdownBtn" type="button" class="secondary" disabled>下载 .md</button>
+            </div>
+          </div>
+
+          <div id="summary" class="summary">
+            <div class="kpi">
+              <span>工作流</span>
+              <strong id="kpiName">--</strong>
+            </div>
+            <div class="kpi">
+              <span>节点数</span>
+              <strong id="kpiNodes">--</strong>
+            </div>
+            <div class="kpi">
+              <span>连接数</span>
+              <strong id="kpiEdges">--</strong>
+            </div>
+          </div>
+
+          <div class="tabs" role="tablist" aria-label="Output tabs">
+            <button class="tab is-active" type="button" data-tab="html">可读视图</button>
+            <button class="tab" type="button" data-tab="md">Markdown</button>
+          </div>
+
+          <section id="tab-html" class="tab-panel" role="tabpanel">
+            <div id="outputHtml" class="output output-html">
+              <p class="hint">点击“生成中文解释”后在这里显示结果。</p>
+            </div>
+          </section>
+
+          <section id="tab-md" class="tab-panel is-hidden" role="tabpanel">
+            <pre id="outputMd" class="output output-md"></pre>
+          </section>
+
+          <section class="cta">
+            <h3>需要我帮你“审模板 / 改模板 / 上线”吗？</h3>
+            <p>
+              你可以把生成的 Markdown 粘贴到 GitHub Issue（或只贴脱敏后的关键节点与需求）。我会给出：
+              节点级风险清单、改造建议、以及一个可落地的上线检查表（human-in-the-loop 默认保留）。
+            </p>
+            <a
+              class="cta-link"
+              href="https://github.com/zjl4616/mimo-ai-delivery-factory/issues/new?title=%5BP02%5D%20n8n%20JSON%20%E4%B8%AD%E6%96%87%E8%A7%A3%E9%87%8A%E5%99%A8%E6%94%B9%E9%80%A0%E8%AF%B7%E6%B1%82&body=%E8%AF%B7%E6%8F%8F%E8%BF%B0%E4%BD%A0%E7%9A%84%E4%B8%9A%E5%8A%A1%E7%9B%AE%E6%A0%87%EF%BC%8C%E5%B9%B6%E7%B2%98%E8%B4%B4%EF%BC%9A%0A%0A1)%20%E5%B7%A5%E4%BD%9C%E6%B5%81%E5%90%8D%E7%A7%B0%EF%BC%88%E5%8F%AF%E8%84%B1%E6%95%8F%EF%BC%89%0A2)%20%E4%BD%A0%E6%83%B3%E8%BE%BE%E5%88%B0%E7%9A%84%E7%BB%93%E6%9E%9C%0A3)%20%E4%BD%A0%E7%8E%B0%E5%9C%A8%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%20JSON%20%28%E8%AF%B7%E5%85%88%E8%84%B1%E6%95%8F%2F%E7%A7%BB%E9%99%A4%E5%87%AD%E8%AF%81%29%20%E6%88%96%E7%94%B1%E6%9C%AC%E5%B7%A5%E5%85%B7%E7%94%9F%E6%88%90%E7%9A%84%20Markdown%20%E7%BB%93%E6%9E%9C%0A"
+              target="_blank"
+              rel="noreferrer"
+              >发起一个公开改造请求（GitHub Issue）</a
+            >
+            <p class="cta-small">不收集任何私域联系人，不承诺收益；只做可验证的交付。</p>
+          </section>
+        </section>
+      </section>
+    </main>
+
+    <script>
+      const $ = (sel) => document.querySelector(sel);
+
+      const jsonInput = $("#jsonInput");
+      const fileInput = $("#fileInput");
+      const analyzeBtn = $("#analyzeBtn");
+      const loadExampleBtn = $("#loadExampleBtn");
+      const clearBtn = $("#clearBtn");
+      const outputHtml = $("#outputHtml");
+      const outputMd = $("#outputMd");
+      const copyMarkdownBtn = $("#copyMarkdownBtn");
+      const downloadMarkdownBtn = $("#downloadMarkdownBtn");
+      const sanitizeBtn = $("#sanitizeBtn");
+      const copySanitizedBtn = $("#copySanitizedBtn");
+      const sanitizedOutput = $("#sanitizedOutput");
+      const githubIssueLink = $("#githubIssueLink");
+      const kpiName = $("#kpiName");
+      const kpiNodes = $("#kpiNodes");
+      const kpiEdges = $("#kpiEdges");
+
+      const GITHUB_ISSUE_TEMPLATE_URL =
+        "https://github.com/zjl4616/mimo-ai-delivery-factory/issues/new?template=p02-n8n-workflow-review-request.yml";
+      githubIssueLink.href = GITHUB_ISSUE_TEMPLATE_URL;
+
+      const NODE_MAP = {
+        "n8n-nodes-base.webhook": { zh: "Webhook 触发器", desc: "通过 HTTP 请求触发工作流。" },
+        "n8n-nodes-base.cron": { zh: "定时触发器", desc: "按时间计划触发（类似 cron）。" },
+        "n8n-nodes-base.manualTrigger": { zh: "手动触发器", desc: "在编辑器中点击执行触发。" },
+        "n8n-nodes-base.httpRequest": { zh: "HTTP 请求", desc: "向 URL 发起 GET/POST 等请求。" },
+        "n8n-nodes-base.set": { zh: "设置字段", desc: "新增/修改数据字段，为下游准备输入。" },
+        "n8n-nodes-base.code": { zh: "代码节点", desc: "用 JS/TS 编写自定义逻辑处理数据。" },
+        "n8n-nodes-base.function": { zh: "函数节点(旧)", desc: "旧版自定义 JS 逻辑节点。" },
+        "n8n-nodes-base.if": { zh: "条件判断(IF)", desc: "按条件分支（true/false）。" },
+        "n8n-nodes-base.switch": { zh: "多分支(Switch)", desc: "按条件匹配多分支。" },
+        "n8n-nodes-base.merge": { zh: "合并(Merge)", desc: "合并多路输入数据。" },
+        "n8n-nodes-base.wait": { zh: "等待(Wait)", desc: "延时或等待某个时间点再继续。" },
+        "n8n-nodes-base.noOp": { zh: "占位(NoOp)", desc: "不做处理，常用于结构占位/调试。" },
+        "n8n-nodes-base.slack": { zh: "Slack", desc: "发送消息、读取频道等 Slack 操作。" },
+        "n8n-nodes-base.discord": { zh: "Discord", desc: "发送消息或操作 Discord。" },
+        "n8n-nodes-base.telegram": { zh: "Telegram", desc: "发送消息或处理 Telegram 事件。" },
+        "n8n-nodes-base.gmail": { zh: "Gmail", desc: "发送/读取邮件、创建草稿等。" },
+        "n8n-nodes-base.emailSend": { zh: "SMTP 发信", desc: "通过 SMTP 发送邮件。" },
+        "n8n-nodes-base.googleSheets": { zh: "Google Sheets", desc: "读写 Google 表格。" },
+        "n8n-nodes-base.googleDrive": { zh: "Google Drive", desc: "上传/下载文件、管理目录。" },
+        "n8n-nodes-base.respondToWebhook": {
+          zh: "Webhook 响应",
+          desc: "向触发 Webhook 的请求返回响应。",
+        },
+      };
+
+      const EXAMPLE_JSON = `{
+  \"name\": \"客服邮件草稿（示例）\",
+  \"nodes\": [
+    {
+      \"parameters\": {
+        \"path\": \"support-inbox\",
+        \"httpMethod\": \"POST\"
+      },
+      \"id\": \"1\",
+      \"name\": \"Webhook\",
+      \"type\": \"n8n-nodes-base.webhook\",
+      \"typeVersion\": 1,
+      \"position\": [260, 240]
+    },
+    {
+      \"parameters\": {
+        \"url\": \"https://api.example.com/tickets\",
+        \"method\": \"POST\",
+        \"timeout\": 30000
+      },
+      \"id\": \"2\",
+      \"name\": \"创建工单\",
+      \"type\": \"n8n-nodes-base.httpRequest\",
+      \"typeVersion\": 4,
+      \"position\": [520, 240]
+    },
+    {
+      \"parameters\": {
+        \"assignments\": {
+          \"assignments\": [
+            { \"id\": \"a\", \"name\": \"draft\", \"value\": \"=\\\"您好，我们已收到您的问题，将在 24 小时内回复。\\\"\" }
+          ]
+        }
+      },
+      \"id\": \"3\",
+      \"name\": \"生成草稿字段\",
+      \"type\": \"n8n-nodes-base.set\",
+      \"typeVersion\": 2,
+      \"position\": [780, 240]
+    },
+    {
+      \"parameters\": {},
+      \"id\": \"4\",
+      \"name\": \"Respond\",
+      \"type\": \"n8n-nodes-base.respondToWebhook\",
+      \"typeVersion\": 1,
+      \"position\": [1040, 240]
+    }
+  ],
+  \"connections\": {
+    \"Webhook\": { \"main\": [[{ \"node\": \"创建工单\", \"type\": \"main\", \"index\": 0 }]] },
+    \"创建工单\": { \"main\": [[{ \"node\": \"生成草稿字段\", \"type\": \"main\", \"index\": 0 }]] },
+    \"生成草稿字段\": { \"main\": [[{ \"node\": \"Respond\", \"type\": \"main\", \"index\": 0 }]] }
+  }
+}`;
+
+      function safeText(text) {
+        const el = document.createElement("span");
+        el.textContent = String(text ?? "");
+        return el.innerHTML;
+      }
+
+      function slugify(name) {
+        return String(name || "workflow").replace(/[^\w\u4e00-\u9fa5-]+/g, "-").slice(0, 60);
+      }
+
+      function getConnectionEdges(connections) {
+        const edges = [];
+        for (const [fromName, ports] of Object.entries(connections || {})) {
+          const main = ports?.main || [];
+          for (const branch of main) {
+            for (const edge of branch || []) {
+              if (edge?.node) edges.push({ from: fromName, to: edge.node });
+            }
+          }
+        }
+        return edges;
+      }
+
+      function deepClone(obj) {
+        return obj ? JSON.parse(JSON.stringify(obj)) : obj;
+      }
+
+      function looksSensitiveKey(key) {
+        const k = String(key || "").toLowerCase();
+        return (
+          k.includes("password") ||
+          k.includes("passwd") ||
+          k.includes("secret") ||
+          k.includes("token") ||
+          k.includes("apikey") ||
+          k.includes("api_key") ||
+          k.includes("accesskey") ||
+          k.includes("access_key") ||
+          k.includes("authorization") ||
+          k.includes("cookie") ||
+          k.includes("bearer")
+        );
+      }
+
+      function looksSensitiveValue(value) {
+        if (typeof value !== "string") return false;
+        const v = value.trim();
+        if (!v) return false;
+        if (v.toLowerCase().startsWith("bearer ")) return true;
+        if (v.length >= 24 && /^[A-Za-z0-9_\\-+/=]+$/.test(v)) return true;
+        if (/^sk-[A-Za-z0-9]{10,}/.test(v)) return true;
+        if (/^[A-Za-z0-9]{32,}$/.test(v)) return true;
+        return false;
+      }
+
+      function sanitizeValue(value) {
+        if (typeof value === "string") return "[REDACTED]";
+        if (typeof value === "number") return 0;
+        if (typeof value === "boolean") return false;
+        if (value === null) return null;
+        return "[REDACTED]";
+      }
+
+      function redactObject(obj) {
+        if (obj === null || obj === undefined) return obj;
+        if (Array.isArray(obj)) return obj.map((v) => redactObject(v));
+        if (typeof obj !== "object") return obj;
+        for (const [k, v] of Object.entries(obj)) {
+          if (looksSensitiveKey(k) || looksSensitiveValue(v)) {
+            obj[k] = sanitizeValue(v);
+            continue;
+          }
+          obj[k] = redactObject(v);
+        }
+        return obj;
+      }
+
+      function sanitizeWorkflowJson(rawText) {
+        const parsed = JSON.parse(rawText);
+        const sanitized = deepClone(parsed);
+
+        // Best effort: redact credentials and parameters.
+        if (sanitized && typeof sanitized === "object") {
+          if (sanitized.nodes && Array.isArray(sanitized.nodes)) {
+            for (const node of sanitized.nodes) {
+              if (!node || typeof node !== "object") continue;
+              if (node.credentials) node.credentials = "[REDACTED]";
+              if (node.parameters) node.parameters = redactObject(node.parameters);
+            }
+          }
+          if (sanitized.credentials) sanitized.credentials = "[REDACTED]";
+          if (sanitized.settings) sanitized.settings = redactObject(sanitized.settings);
+          if (sanitized.staticData) sanitized.staticData = "[REDACTED]";
+        }
+        return JSON.stringify(sanitized, null, 2);
+      }
+
+      function buildNodeIndex(nodes) {
+        const index = new Map();
+        for (const node of nodes || []) {
+          if (node?.name) index.set(node.name, node);
+        }
+        return index;
+      }
+
+      function findStartNodes(nodes, edges) {
+        const inDegree = new Map();
+        for (const n of nodes) inDegree.set(n.name, 0);
+        for (const e of edges) inDegree.set(e.to, (inDegree.get(e.to) || 0) + 1);
+        return nodes.filter((n) => (inDegree.get(n.name) || 0) === 0);
+      }
+
+      function explainNodeType(type) {
+        if (!type) return { zh: "未知节点", desc: "无法识别节点类型。" };
+        if (NODE_MAP[type]) return NODE_MAP[type];
+        const lower = String(type).toLowerCase();
+        if (lower.includes("trigger")) return { zh: "触发器", desc: "用于启动工作流的触发节点。" };
+        if (lower.includes("http")) return { zh: "HTTP / Web", desc: "与外部 URL/API 交互的节点。" };
+        if (lower.includes("openai") || lower.includes("gpt")) return { zh: "AI 节点", desc: "调用模型进行生成/分类等操作。" };
+        return { zh: "自定义/其他节点", desc: "该节点类型未内置中文映射，建议查看其参数配置与官方文档。" };
+      }
+
+      function detectRisks(nodes) {
+        const risks = [];
+        for (const node of nodes || []) {
+          const name = node?.name || "未命名节点";
+          const type = String(node?.type || "");
+          const params = node?.parameters || {};
+          const paramsStr = JSON.stringify(params).toLowerCase();
+
+          if (paramsStr.includes("password") || paramsStr.includes("secret") || paramsStr.includes("token") || paramsStr.includes("apikey")) {
+            risks.push({
+              severity: "high",
+              title: "疑似敏感信息",
+              detail: `节点“${name}”的参数可能包含敏感字段（password/secret/token/apikey）。建议使用 n8n 凭证管理，避免明文配置。`,
+            });
+          }
+
+          if (type === "n8n-nodes-base.httpRequest") {
+            const timeout = Number(params?.timeout || 0);
+            if (!timeout) {
+              risks.push({
+                severity: "medium",
+                title: "HTTP 超时未设置",
+                detail: `HTTP 请求节点“${name}”未设置 timeout，网络抖动可能导致工作流卡住。`,
+              });
+            }
+            const url = params?.url;
+            if (typeof url === "string" && url.startsWith("http://")) {
+              risks.push({
+                severity: "medium",
+                title: "HTTP 明文传输",
+                detail: `HTTP 请求节点“${name}”使用 http:// URL，建议改为 https:// 以降低泄露风险。`,
+              });
+            }
+          }
+
+          const hasErrorHandling = Boolean(node?.onError) || paramsStr.includes("error") || paramsStr.includes("retry");
+          if (!hasErrorHandling) {
+            risks.push({
+              severity: "low",
+              title: "错误处理不明确",
+              detail: `节点“${name}”未发现明显错误处理/重试配置（可能在其他位置设置）。建议关键节点补充失败分支与通知/日志。`,
+            });
+          }
+        }
+
+        return risks;
+      }
+
+      function buildFlowText(nodes, edges, maxSteps = 40) {
+        if (!nodes?.length) return "未发现节点。";
+        if (!edges?.length) return "未发现连接关系（connections 为空或结构不标准）。";
+
+        const out = [];
+        const adjacency = new Map();
+        for (const e of edges) {
+          if (!adjacency.has(e.from)) adjacency.set(e.from, []);
+          adjacency.get(e.from).push(e.to);
+        }
+
+        const starts = findStartNodes(nodes, edges);
+        const seeds = starts.length ? starts : [nodes[0]];
+        let printed = 0;
+        for (const s of seeds) {
+          const queue = [{ path: [s.name] }];
+          const visitedPath = new Set();
+          while (queue.length && printed < maxSteps) {
+            const { path } = queue.shift();
+            const last = path[path.length - 1];
+            const key = path.join("->");
+            if (visitedPath.has(key)) continue;
+            visitedPath.add(key);
+
+            const nexts = adjacency.get(last) || [];
+            if (!nexts.length) {
+              out.push(path.map((p) => `\`${p}\``).join(" → "));
+              printed += 1;
+              continue;
+            }
+
+            if (path.length > 18) {
+              out.push(path.slice(0, 18).map((p) => `\`${p}\``).join(" → ") + " → …");
+              printed += 1;
+              continue;
+            }
+
+            for (const n of nexts.slice(0, 4)) queue.push({ path: [...path, n] });
+          }
+        }
+        return out.length ? out.join("\n") : "未能生成可读的流程概览。";
+      }
+
+      function toMarkdown(report) {
+        const lines = [];
+        lines.push(`# n8n 工作流中文说明`);
+        lines.push("");
+        lines.push(`- 工作流名称：${report.name}`);
+        lines.push(`- 节点数：${report.nodes.length}`);
+        lines.push(`- 连接数：${report.edges.length}`);
+        lines.push("");
+        lines.push("## 流程概览（简化）");
+        lines.push("");
+        lines.push(report.flowText);
+        lines.push("");
+        lines.push("## 节点说明");
+        lines.push("");
+        report.nodes.forEach((n, i) => {
+          lines.push(`### ${i + 1}. ${n.name}`);
+          lines.push(`- 类型：\`${n.type}\``);
+          lines.push(`- 中文：${n.typeZh}（${n.typeDesc}）`);
+          if (n.highlights.length) lines.push(`- 关键参数：${n.highlights.join("；")}`);
+          lines.push("");
+        });
+        lines.push("## 风险点（启发式）");
+        lines.push("");
+        if (!report.risks.length) {
+          lines.push("- 未发现明显风险。");
+        } else {
+          report.risks.forEach((r) => lines.push(`- [${r.severity}] ${r.title}：${r.detail}`));
+        }
+        lines.push("");
+        lines.push("## 下一步建议");
+        lines.push("");
+        lines.push("- 先用 3-5 个历史样本回放工作流，确认每一步输入/输出字段。");
+        lines.push("- 关键节点补齐失败分支（通知/日志/重试策略），保留人工复核点（尤其是对外发送/写入）。");
+        lines.push("- 将 URL、关键参数抽成环境变量/凭证，避免硬编码。");
+        lines.push("");
+        lines.push("---");
+        lines.push("免责声明：本工具输出仅用于辅助理解，可能不准确/不完整；请以原始 JSON 与 n8n 官方文档为准。");
+        return lines.join("\n");
+      }
+
+      function pickHighlights(node) {
+        const params = node?.parameters || {};
+        const items = [];
+        if (params?.url) items.push(`URL=${params.url}`);
+        if (params?.method) items.push(`method=${params.method}`);
+        if (params?.path) items.push(`path=${params.path}`);
+        if (params?.operation) items.push(`operation=${params.operation}`);
+        if (params?.resource) items.push(`resource=${params.resource}`);
+        if (params?.timeout) items.push(`timeout=${params.timeout}`);
+        return items.slice(0, 6);
+      }
+
+      function buildReport(data) {
+        const name = data?.name || "未命名工作流";
+        const nodes = (data?.nodes || []).map((n) => {
+          const exp = explainNodeType(n?.type);
+          return {
+            name: n?.name || "未命名节点",
+            type: n?.type || "unknown",
+            typeZh: exp.zh,
+            typeDesc: exp.desc,
+            highlights: pickHighlights(n),
+            raw: n,
+          };
+        });
+        const edges = getConnectionEdges(data?.connections || {});
+        const flowText = buildFlowText(nodes, edges);
+        const risks = detectRisks(data?.nodes || []);
+        return { name, nodes, edges, flowText, risks };
+      }
+
+      function renderHtml(report) {
+        const risksHtml = report.risks.length
+          ? `<ul class="risk-list">${report.risks
+              .slice(0, 80)
+              .map(
+                (r) =>
+                  `<li class="risk risk-${r.severity}"><strong>[${safeText(r.severity)}]</strong> ${safeText(
+                    r.title
+                  )}<div class="risk-detail">${safeText(r.detail)}</div></li>`
+              )
+              .join("")}</ul>`
+          : `<p class="ok">未发现明显风险（仅启发式检查）。</p>`;
+
+        const nodesHtml = `<ol class="node-list">${report.nodes
+          .map((n) => {
+            const hl = n.highlights.length ? `<div class="meta">${n.highlights.map(safeText).join(" · ")}</div>` : "";
+            return `<li class="node">
+              <div class="node-head">
+                <strong>${safeText(n.name)}</strong>
+                <span class="badge">${safeText(n.typeZh)}</span>
+              </div>
+              <div class="sub">${safeText(n.type)}</div>
+              <div class="desc">${safeText(n.typeDesc)}</div>
+              ${hl}
+            </li>`;
+          })
+          .join("")}</ol>`;
+
+        return `
+          <section class="block">
+            <h3>流程概览（简化）</h3>
+            <pre class="flow">${safeText(report.flowText)}</pre>
+          </section>
+          <section class="block">
+            <h3>节点说明</h3>
+            ${nodesHtml}
+          </section>
+          <section class="block">
+            <h3>风险点（启发式）</h3>
+            ${risksHtml}
+          </section>
+        `;
+      }
+
+      function setActiveTab(tab) {
+        document.querySelectorAll(".tab").forEach((btn) => btn.classList.toggle("is-active", btn.dataset.tab === tab));
+        $("#tab-html").classList.toggle("is-hidden", tab !== "html");
+        $("#tab-md").classList.toggle("is-hidden", tab !== "md");
+      }
+
+      document.querySelectorAll(".tab").forEach((btn) => {
+        btn.addEventListener("click", () => setActiveTab(btn.dataset.tab));
+      });
+
+      loadExampleBtn.addEventListener("click", () => {
+        jsonInput.value = EXAMPLE_JSON;
+        jsonInput.focus();
+      });
+
+      clearBtn.addEventListener("click", () => {
+        jsonInput.value = "";
+        outputHtml.innerHTML = `<p class="hint">点击“生成中文解释”后在这里显示结果。</p>`;
+        outputMd.textContent = "";
+        kpiName.textContent = "--";
+        kpiNodes.textContent = "--";
+        kpiEdges.textContent = "--";
+        copyMarkdownBtn.disabled = true;
+        downloadMarkdownBtn.disabled = true;
+      });
+
+      fileInput.addEventListener("change", async (e) => {
+        const f = e.target.files?.[0];
+        if (!f) return;
+        const text = await f.text();
+        jsonInput.value = text;
+      });
+
+      let lastMarkdown = "";
+
+      analyzeBtn.addEventListener("click", () => {
+        const raw = jsonInput.value.trim();
+        if (!raw) {
+          outputHtml.innerHTML = `<p class="error">请先粘贴或导入 JSON。</p>`;
+          return;
+        }
+
+        let data;
+        try {
+          data = JSON.parse(raw);
+        } catch (err) {
+          outputHtml.innerHTML = `<p class="error">JSON 解析失败：${safeText(err?.message || String(err))}</p>`;
+          return;
+        }
+
+        const report = buildReport(data);
+        kpiName.textContent = report.name;
+        kpiNodes.textContent = String(report.nodes.length);
+        kpiEdges.textContent = String(report.edges.length);
+
+        lastMarkdown = toMarkdown(report);
+        outputMd.textContent = lastMarkdown;
+        outputHtml.innerHTML = renderHtml(report);
+
+        copyMarkdownBtn.disabled = false;
+        downloadMarkdownBtn.disabled = false;
+        setActiveTab("html");
+      });
+
+      sanitizeBtn.addEventListener("click", () => {
+        const raw = jsonInput.value.trim();
+        if (!raw) {
+          sanitizedOutput.value = "请先粘贴或导入 JSON。";
+          copySanitizedBtn.disabled = true;
+          return;
+        }
+        try {
+          const sanitized = sanitizeWorkflowJson(raw);
+          sanitizedOutput.value = sanitized;
+          copySanitizedBtn.disabled = false;
+        } catch (e) {
+          sanitizedOutput.value = `脱敏失败：${String(e?.message || e)}`;
+          copySanitizedBtn.disabled = true;
+        }
+      });
+
+      copySanitizedBtn.addEventListener("click", async () => {
+        if (!sanitizedOutput.value) return;
+        try {
+          await navigator.clipboard.writeText(sanitizedOutput.value);
+          copySanitizedBtn.textContent = "已复制";
+          setTimeout(() => (copySanitizedBtn.textContent = "复制脱敏 JSON"), 1200);
+        } catch {
+          alert("复制失败：浏览器可能禁止剪贴板写入。你可以手动复制。");
+        }
+      });
+
+      copyMarkdownBtn.addEventListener("click", async () => {
+        if (!lastMarkdown) return;
+        try {
+          await navigator.clipboard.writeText(lastMarkdown);
+          copyMarkdownBtn.textContent = "已复制";
+          setTimeout(() => (copyMarkdownBtn.textContent = "复制 Markdown"), 1200);
+        } catch {
+          alert("复制失败：浏览器可能禁止剪贴板写入。你可以切到 Markdown 标签页手动复制。");
+        }
+      });
+
+      downloadMarkdownBtn.addEventListener("click", () => {
+        if (!lastMarkdown) return;
+        const name = slugify(kpiName.textContent || "n8n-workflow");
+        const blob = new Blob([lastMarkdown], { type: "text/markdown;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${name}-n8n-explained.md`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      });
+    </script>
+  </body>
+</html>

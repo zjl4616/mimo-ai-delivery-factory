@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>n8n Workflow JSON 脱敏器（离线）</title>
+    <meta
+      name="description"
+      content="离线脱敏 n8n workflow JSON：移除/替换 credentials、token、API key、webhook URL、邮箱/手机号等敏感信息，并生成脱敏报告与公开求助帖模板。全程本地运行，不联网。"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="intro">
+        <p class="eyebrow">Public demand experiment P07</p>
+        <h1 data-i18n="title">n8n Workflow JSON 脱敏器（离线）</h1>
+        <p class="lede" data-i18n="lede">
+          把 workflow JSON 脱敏后再去论坛/Reddit/GitHub 求助：本工具会标记并替换常见敏感字段（credentials、headers、token、webhook
+          URL、email/phone…），并生成一份可公开粘贴的 Markdown 模板。全程在你的浏览器本地运行，不联网。
+        </p>
+        <div class="intro-actions">
+          <button id="loadExampleBtn" type="button" class="secondary" data-i18n="loadExample">加载示例</button>
+          <button id="clearBtn" type="button" class="secondary" data-i18n="clear">清空</button>
+          <div class="lang-switch" aria-label="Language switch">
+            <button id="langZhBtn" type="button" class="lang-button is-active" data-lang="zh">中文</button>
+            <button id="langEnBtn" type="button" class="lang-button" data-lang="en">EN</button>
+          </div>
+        </div>
+      </header>
+
+      <section class="grid">
+        <section class="panel">
+          <div class="panel-head">
+            <h2 data-i18n="inputTitle">输入</h2>
+            <div class="panel-actions">
+              <button id="redactBtn" type="button" class="primary" data-i18n="redact">开始脱敏</button>
+            </div>
+          </div>
+
+          <label class="label">
+            <span data-i18n="jsonLabel">Workflow JSON（粘贴/上传）</span>
+            <textarea
+              id="inputJson"
+              spellcheck="false"
+              placeholder='例如：{"nodes":[...],"connections":{...},"settings":{...}}'
+            ></textarea>
+          </label>
+
+          <div class="row">
+            <label class="label">
+              <span data-i18n="levelLabel">脱敏级别</span>
+              <select id="levelSelect">
+                <option value="public" data-i18n="levelPublic">公开求助（更严格）</option>
+                <option value="internal" data-i18n="levelInternal">内部讨论（更宽松）</option>
+              </select>
+            </label>
+
+            <label class="label">
+              <span data-i18n="companyLabel">客户/公司名（可选）</span>
+              <input id="companyInput" type="text" placeholder="如：Acme Inc / 张三" />
+            </label>
+          </div>
+
+          <div class="row">
+            <label class="file" data-i18n="fileLabel">
+              选择 JSON 文件
+              <input id="fileInput" type="file" accept=".json,application/json,text/plain" />
+            </label>
+
+            <div class="small">
+              <div class="pill" id="parseStatePill" aria-live="polite">Ready</div>
+              <div class="pill" id="changesPill" aria-live="polite">0 changes</div>
+            </div>
+          </div>
+
+          <details class="disclaimer">
+            <summary data-i18n="privacyTitle">隐私提示（必读）</summary>
+            <ul>
+              <li data-i18n="privacyA">工具不联网，但你可能会把输出粘贴到公开社区。</li>
+              <li data-i18n="privacyB">无法保证 100% 安全：发布前请按检查清单人工复核。</li>
+              <li data-i18n="privacyC">不要分享任何 token / API key / webhook URL / 邮箱 / 电话 / 客户信息。</li>
+            </ul>
+          </details>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <h2 data-i18n="outputTitle">输出</h2>
+            <div class="panel-actions">
+              <button id="copyJsonBtn" type="button" class="secondary" disabled data-i18n="copyJson">复制脱敏 JSON</button>
+              <button id="downloadJsonBtn" type="button" class="secondary" disabled data-i18n="downloadJson">下载 JSON</button>
+              <button id="copyMdBtn" type="button" class="secondary" disabled data-i18n="copyMd">复制求助模板</button>
+              <button id="downloadMdBtn" type="button" class="secondary" disabled data-i18n="downloadMd">下载 Markdown</button>
+            </div>
+          </div>
+
+          <div id="emptyState" class="output output-html">
+            <p class="hint" data-i18n="emptyHint">
+              粘贴 workflow JSON，然后点“开始脱敏”。你会得到：脱敏后的 JSON、脱敏报告、公开求助帖模板。
+            </p>
+          </div>
+
+          <div id="report" class="output hidden">
+            <section class="block">
+              <h3 data-i18n="redactedJsonTitle">脱敏后的 JSON</h3>
+              <pre class="output-md" id="redactedJson"></pre>
+            </section>
+
+            <section class="block">
+              <h3 data-i18n="reportTitle">脱敏报告</h3>
+              <div id="reportMeta" class="meta"></div>
+              <div id="reportTableWrap"></div>
+            </section>
+
+            <section class="block">
+              <h3 data-i18n="templateTitle">公开求助帖模板（Markdown）</h3>
+              <pre class="output-md" id="markdownOut"></pre>
+              <p class="cta-small" data-i18n="templateNote">
+                建议只粘贴“脱敏后的 JSON（截断后）+ 报错信息 + 你期望的输出”，不要贴真实凭证或客户数据。
+              </p>
+            </section>
+
+            <section class="cta">
+              <h3 data-i18n="ctaTitle">需要帮你做更深入的安全/可靠性审查？</h3>
+              <p data-i18n="ctaBody">
+                你可以把脱敏后的 JSON + 复现信息提交到 GitHub Issue。我可以给出风险点清单与改造建议（公开 mini-review 或付费深度 review）。
+              </p>
+              <a class="cta-link" href="../../offers/p02-n8n-security-review/" target="_blank" rel="noreferrer" data-i18n="ctaLink"
+                >打开 Review 说明页</a
+              >
+            </section>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script>
+      const storageKey = "mimoFactoryLang";
+      const redactionTokens = {
+        credential: "REDACTED_CREDENTIAL",
+        secret: "REDACTED_SECRET",
+        token: "REDACTED_TOKEN",
+        url: "REDACTED_URL",
+        email: "REDACTED_EMAIL",
+        phone: "REDACTED_PHONE",
+        host: "REDACTED_HOST",
+        company: "REDACTED_ENTITY"
+      };
+
+      const i18n = {
+        zh: {
+          title: "n8n Workflow JSON 脱敏器（离线）",
+          lede:
+            "把 workflow JSON 脱敏后再去论坛/Reddit/GitHub 求助：移除/替换 credentials、token、API key、webhook URL、邮箱/手机号等敏感信息，并生成脱敏报告与求助模板。全程本地运行，不联网。",
+          loadExample: "加载示例",
+          clear: "清空",
+          inputTitle: "输入",
+          outputTitle: "输出",
+          jsonLabel: "Workflow JSON（粘贴/上传）",
+          levelLabel: "脱敏级别",
+          levelPublic: "公开求助（更严格）",
+          levelInternal: "内部讨论（更宽松）",
+          companyLabel: "客户/公司名（可选）",
+          fileLabel: "选择 JSON 文件",
+          privacyTitle: "隐私提示（必读）",
+          privacyA: "工具不联网，但你可能会把输出粘贴到公开社区。",
+          privacyB: "无法保证 100% 安全：发布前请按检查清单人工复核。",
+          privacyC: "不要分享任何 token / API key / webhook URL / 邮箱 / 电话 / 客户信息。",
+          redact: "开始脱敏",
+          emptyHint: "粘贴 workflow JSON，然后点“开始脱敏”。你会得到：脱敏后的 JSON、脱敏报告、公开求助帖模板。",
+          redactedJsonTitle: "脱敏后的 JSON",
+          reportTitle: "脱敏报告",
+          templateTitle: "公开求助帖模板（Markdown）",
+          templateNote: "建议只粘贴“脱敏后的 JSON（截断后）+ 报错信息 + 你期望的输出”，不要贴真实凭证或客户数据。",
+          copyJson: "复制脱敏 JSON",
+          downloadJson: "下载 JSON",
+          copyMd: "复制求助模板",
+          downloadMd: "下载 Markdown",
+          ctaTitle: "需要帮你做更深入的安全/可靠性审查？",
+          ctaBody:
+            "你可以把脱敏后的 JSON + 复现信息提交到 GitHub Issue。我可以给出风险点清单与改造建议（公开 mini-review 或付费深度 review）。",
+          ctaLink: "打开 Review 说明页",
+          parseOk: "JSON 解析成功",
+          parseFail: "JSON 解析失败：请确认你粘贴的是完整 workflow JSON",
+          changes: (n) => `已修改 ${n} 处`,
+          copied: "已复制到剪贴板",
+          tooEmpty: "请输入 workflow JSON",
+          internalNote:
+            "内部讨论模式仍建议脱敏 credentials/Authorization/token。若要与同事共享，请确认没有客户数据、邮箱/手机号与私有域名。",
+          publicNote:
+            "公开求助模式会更严格：会脱敏 credentials/token/Authorization/webhook URL/邮箱/手机号/内网 IP 等。发布前仍需人工复核。",
+          reportMeta: (level, nodes, changes) => `模式：${level}｜nodes：${nodes}｜修改：${changes}`,
+          tableHeaderPath: "字段路径",
+          tableHeaderAction: "动作",
+          tableHeaderBefore: "原始值（模糊）",
+          tableHeaderAfter: "替换后",
+        },
+        en: {
+          title: "n8n Workflow JSON Redactor (Offline)",
+          lede:
+            "Redact workflow JSON before asking for help publicly: remove/replace credentials, tokens, API keys, webhook URLs, emails/phones, and generate a redaction report + a Markdown help template. Runs fully offline in your browser.",
+          loadExample: "Load example",
+          clear: "Clear",
+          inputTitle: "Input",
+          outputTitle: "Output",
+          jsonLabel: "Workflow JSON (paste/upload)",
+          levelLabel: "Redaction level",
+          levelPublic: "Public help (stricter)",
+          levelInternal: "Internal discussion (looser)",
+          companyLabel: "Client/company name (optional)",
+          fileLabel: "Choose JSON file",
+          privacyTitle: "Privacy notes (read first)",
+          privacyA: "The tool is offline, but you may paste outputs into public forums.",
+          privacyB: "No tool can guarantee 100% safety. Review manually before posting.",
+          privacyC: "Never share tokens/API keys/webhook URLs/emails/phones/client data.",
+          redact: "Redact now",
+          emptyHint: "Paste workflow JSON and click “Redact now”. You'll get redacted JSON, a redaction report, and a Markdown help template.",
+          redactedJsonTitle: "Redacted JSON",
+          reportTitle: "Redaction report",
+          templateTitle: "Public help template (Markdown)",
+          templateNote: "Only paste the redacted JSON (maybe truncated) + errors + expected output. Never paste real credentials or client data.",
+          copyJson: "Copy redacted JSON",
+          downloadJson: "Download JSON",
+          copyMd: "Copy help template",
+          downloadMd: "Download Markdown",
+          ctaTitle: "Want a deeper security/reliability review?",
+          ctaBody:
+            "Submit the redacted JSON + repro info as a GitHub issue. I can deliver a risk checklist and improvement suggestions (public mini-review or paid deep review).",
+          ctaLink: "Open review offer",
+          parseOk: "JSON parsed successfully",
+          parseFail: "JSON parse failed. Please paste the full workflow JSON.",
+          changes: (n) => `${n} changes`,
+          copied: "Copied",
+          tooEmpty: "Please paste workflow JSON",
+          internalNote:
+            "Internal mode still redacts credentials/Authorization/token. Make sure you remove any client data and private domains before sharing.",
+          publicNote:
+            "Public mode is stricter: redacts credentials/token/Authorization/webhook URLs/emails/phones/private IPs, etc. Still review manually before posting.",
+          reportMeta: (level, nodes, changes) => `Mode: ${level} | nodes: ${nodes} | changes: ${changes}`,
+          tableHeaderPath: "Field path",
+          tableHeaderAction: "Action",
+          tableHeaderBefore: "Before (blurred)",
+          tableHeaderAfter: "After",
+        },
+      };
+
+      function setLanguage(lang) {
+        document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
+        document.querySelectorAll("[data-i18n]").forEach((el) => {
+          const key = el.dataset.i18n;
+          const value = i18n[lang][key];
+          if (typeof value === "function") return;
+          el.textContent = value;
+        });
+        document.querySelectorAll(".lang-button").forEach((button) => {
+          button.classList.toggle("is-active", button.dataset.lang === lang);
+        });
+        localStorage.setItem(storageKey, lang);
+      }
+
+      function normalizeText(text) {
+        return (text || "").replace(/\r\n/g, "\n").trim();
+      }
+
+      function blurValue(value) {
+        if (value === null || value === undefined) return String(value);
+        const str = typeof value === "string" ? value : JSON.stringify(value);
+        if (str.length <= 10) return str;
+        return `${str.slice(0, 4)}…${str.slice(-4)}`;
+      }
+
+      function isPrivateIp(host) {
+        const h = host.trim();
+        if (/^(localhost|127\\.0\\.0\\.1|0\\.0\\.0\\.0)$/i.test(h)) return true;
+        if (/^10\\./.test(h)) return true;
+        if (/^192\\.168\\./.test(h)) return true;
+        const m = /^172\\.(\\d+)\\./.exec(h);
+        if (m) {
+          const n = Number(m[1]);
+          return n >= 16 && n <= 31;
+        }
+        return false;
+      }
+
+      function redactUrl(value, report, path, level) {
+        if (typeof value !== "string") return value;
+        let out = value;
+        const urlLike = /https?:\\/\\//i.test(out) || /webhook/i.test(out);
+        if (!urlLike) return value;
+        try {
+          const u = new URL(out);
+          const host = u.hostname;
+          const isPrivate = isPrivateIp(host);
+          if (level === "public" && isPrivate) {
+            out = `${u.protocol}//${redactionTokens.host}/REDACTED_PATH`;
+          } else {
+            out = `${u.protocol}//REDACTED_DOMAIN${u.pathname ? "/REDACTED_PATH" : ""}`;
+          }
+        } catch {
+          out = redactionTokens.url;
+        }
+        if (out !== value) {
+          report.push({ path, action: "replace_url", before: blurValue(value), after: out });
+        }
+        return out;
+      }
+
+      const SENSITIVE_KEYS = new Set([
+        "token",
+        "accessToken",
+        "refreshToken",
+        "apiKey",
+        "api_key",
+        "apikey",
+        "apiSecret",
+        "api_secret",
+        "secret",
+        "clientSecret",
+        "client_secret",
+        "password",
+        "pass",
+        "authorization",
+        "Authorization",
+        "bearer",
+        "cookie",
+        "webhookUrl",
+        "webhook_url",
+        "url",
+        "uri",
+        "endpoint",
+      ]);
+
+      const EMAIL_RE = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}/gi;
+      const PHONE_RE = /(\\+?\\d[\\d\\s().-]{7,}\\d)/g;
+      const SECRET_VALUE_RE = /(sk-[A-Za-z0-9]{10,}|AIza[0-9A-Za-z\\-_]{10,}|xox[baprs]-[0-9A-Za-z-]{10,}|ghp_[0-9A-Za-z]{20,}|\\bBearer\\s+[A-Za-z0-9._\\-]{10,})/g;
+
+      function redactStringHeuristics(value, report, path, level, company) {
+        if (typeof value !== "string" || !value) return value;
+        let out = value;
+        if (company && typeof company === "string" && company.trim()) {
+          const needle = company.trim();
+          if (needle.length >= 2) {
+            const re = new RegExp(needle.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&"), "g");
+            out = out.replace(re, redactionTokens.company);
+          }
+        }
+        out = out.replace(EMAIL_RE, `${redactionTokens.email}@example.com`);
+        out = out.replace(PHONE_RE, redactionTokens.phone);
+        out = out.replace(SECRET_VALUE_RE, redactionTokens.secret);
+        if (level === "public") {
+          out = redactUrl(out, report, path, level);
+        }
+        if (out !== value) {
+          report.push({ path, action: "replace_string", before: blurValue(value), after: blurValue(out) });
+        }
+        return out;
+      }
+
+      function shouldDropCredentialsObject(pathParts, key) {
+        // In n8n exports, nodes may contain `credentials` which can reveal credential identifiers.
+        // Safer default is to remove or hard-redact.
+        return key === "credentials";
+      }
+
+      function redactJson(value, options, report, pathParts) {
+        const path = pathParts.join(".");
+        if (Array.isArray(value)) {
+          return value.map((item, idx) => redactJson(item, options, report, pathParts.concat([`[${idx}]`])));
+        }
+
+        if (value && typeof value === "object") {
+          const out = {};
+          for (const [key, v] of Object.entries(value)) {
+            const nextPathParts = pathParts.concat([key]);
+            const nextPath = nextPathParts.join(".");
+
+            if (shouldDropCredentialsObject(pathParts, key)) {
+              report.push({ path: nextPath, action: "remove_object", before: "(object)", after: "(removed)" });
+              if (options.level === "internal") {
+                out[key] = { redacted: true };
+              }
+              continue;
+            }
+
+            if (typeof v === "string") {
+              // Key-based rules first
+              if (SENSITIVE_KEYS.has(key)) {
+                const replaced =
+                  key.toLowerCase().includes("url") || key.toLowerCase().includes("endpoint") || key.toLowerCase() === "url"
+                    ? redactionTokens.url
+                    : redactionTokens.secret;
+                if (replaced !== v) report.push({ path: nextPath, action: "replace_value", before: blurValue(v), after: replaced });
+                out[key] = replaced;
+                continue;
+              }
+              out[key] = redactStringHeuristics(v, report, nextPath, options.level, options.company);
+              continue;
+            }
+
+            if (v && typeof v === "object") {
+              // Special-case headers objects: redact Authorization and cookies.
+              if (key.toLowerCase() === "headers" && v && typeof v === "object" && !Array.isArray(v)) {
+                const headersOut = {};
+                for (const [hk, hv] of Object.entries(v)) {
+                  const headerPath = `${nextPath}.${hk}`;
+                  if (typeof hv === "string" && /authorization|cookie/i.test(hk)) {
+                    report.push({
+                      path: headerPath,
+                      action: "replace_header",
+                      before: blurValue(hv),
+                      after: redactionTokens.secret,
+                    });
+                    headersOut[hk] = redactionTokens.secret;
+                  } else {
+                    headersOut[hk] = redactJson(hv, options, report, nextPathParts.concat([hk]));
+                  }
+                }
+                out[key] = headersOut;
+                continue;
+              }
+              out[key] = redactJson(v, options, report, nextPathParts);
+              continue;
+            }
+
+            out[key] = v;
+          }
+          return out;
+        }
+
+        return value;
+      }
+
+      function stringifyJson(obj) {
+        return JSON.stringify(obj, null, 2);
+      }
+
+      function truncateForPosting(text, maxChars = 12000) {
+        if (text.length <= maxChars) return text;
+        return text.slice(0, maxChars) + "\n\n... (truncated for posting) ...\n";
+      }
+
+      function buildMarkdownTemplate(lang, redactedJsonText, report, options) {
+        const note =
+          options.level === "public" ? i18n[lang].publicNote : i18n[lang].internalNote;
+        const top = lang === "zh"
+          ? `# [求助] n8n workflow 报错/行为异常：请帮我看下\n\n## 环境\n- n8n 版本：\n- 部署：Docker / Desktop / Cloud\n- 相关节点：\n\n## 现象\n- 报错信息（脱敏后）：\n\n## 我期望的结果\n- \n\n## 我已经尝试过\n- \n\n## 脱敏后的 workflow JSON（可能截断）\n\\`\\`\\`json\n${truncateForPosting(redactedJsonText)}\n\\`\\`\\`\n\n## 脱敏说明\n- 模式：${options.level}\n- 修改：${report.length} 处\n- 备注：${note}\n`
+          : `# [Help] n8n workflow error / unexpected behavior\n\n## Environment\n- n8n version:\n- Deployment: Docker / Desktop / Cloud\n- Key nodes:\n\n## What’s happening\n- Error message (sanitized):\n\n## Expected outcome\n-\n\n## What I tried\n-\n\n## Redacted workflow JSON (may be truncated)\n\\`\\`\\`json\n${truncateForPosting(redactedJsonText)}\n\\`\\`\\`\n\n## Redaction notes\n- Mode: ${options.level}\n- Changes: ${report.length}\n- Note: ${note}\n`;
+        return top;
+      }
+
+      function renderReportTable(lang, report) {
+        const head = `
+          <table class="table">
+            <thead>
+              <tr>
+                <th>${i18n[lang].tableHeaderPath}</th>
+                <th>${i18n[lang].tableHeaderAction}</th>
+                <th>${i18n[lang].tableHeaderBefore}</th>
+                <th>${i18n[lang].tableHeaderAfter}</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${report
+                .slice(0, 1200)
+                .map(
+                  (row) => `
+                <tr>
+                  <td><code>${escapeHtml(row.path)}</code></td>
+                  <td><code>${escapeHtml(row.action)}</code></td>
+                  <td><code>${escapeHtml(String(row.before))}</code></td>
+                  <td><code>${escapeHtml(String(row.after))}</code></td>
+                </tr>
+              `
+                )
+                .join("")}
+            </tbody>
+          </table>
+        `;
+        return head;
+      }
+
+      function escapeHtml(value) {
+        return value
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      function toast(text) {
+        const el = document.createElement("div");
+        el.className = "toast";
+        el.textContent = text;
+        document.body.appendChild(el);
+        setTimeout(() => el.classList.add("is-on"), 10);
+        setTimeout(() => {
+          el.classList.remove("is-on");
+          setTimeout(() => el.remove(), 250);
+        }, 2200);
+      }
+
+      function downloadText(text, filename, mime = "text/plain;charset=utf-8") {
+        const blob = new Blob([text], { type: mime });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      }
+
+      function setPill(id, text, ok = true) {
+        const el = document.getElementById(id);
+        el.textContent = text;
+        el.classList.toggle("pill-bad", !ok);
+      }
+
+      function clearAll() {
+        document.getElementById("inputJson").value = "";
+        document.getElementById("companyInput").value = "";
+        setPill("parseStatePill", "Ready", true);
+        setPill("changesPill", "0 changes", true);
+        document.getElementById("emptyState").classList.remove("hidden");
+        document.getElementById("report").classList.add("hidden");
+        document.getElementById("copyJsonBtn").disabled = true;
+        document.getElementById("downloadJsonBtn").disabled = true;
+        document.getElementById("copyMdBtn").disabled = true;
+        document.getElementById("downloadMdBtn").disabled = true;
+      }
+
+      function loadExample() {
+        const example = {
+          name: "Example workflow",
+          nodes: [
+            {
+              id: "node1",
+              name: "HTTP Request",
+              type: "n8n-nodes-base.httpRequest",
+              parameters: {
+                url: "https://api.example.com/v1/items?token=sk-abc123456789",
+                headers: {
+                  Authorization: "Bearer sk-abc123456789",
+                  "X-Api-Key": "AIza-EXAMPLE-KEY-123456",
+                },
+                auth: "predefinedCredentialType",
+              },
+              credentials: {
+                httpBasicAuth: { id: "123", name: "My Secret Cred" },
+              },
+            },
+          ],
+          connections: {},
+        };
+        document.getElementById("inputJson").value = stringifyJson(example);
+        document.getElementById("levelSelect").value = "public";
+        document.getElementById("companyInput").value = "Acme";
+      }
+
+      async function doRedact() {
+        const lang = localStorage.getItem(storageKey) || "zh";
+        const raw = normalizeText(document.getElementById("inputJson").value);
+        if (!raw) {
+          toast(i18n[lang].tooEmpty);
+          return;
+        }
+
+        let parsed;
+        try {
+          parsed = JSON.parse(raw);
+          setPill("parseStatePill", i18n[lang].parseOk, true);
+        } catch {
+          setPill("parseStatePill", i18n[lang].parseFail, false);
+          return;
+        }
+
+        const options = {
+          level: document.getElementById("levelSelect").value,
+          company: normalizeText(document.getElementById("companyInput").value),
+        };
+
+        const report = [];
+        const redacted = redactJson(parsed, options, report, []);
+        const redactedJsonText = stringifyJson(redacted);
+        const md = buildMarkdownTemplate(lang, redactedJsonText, report, options);
+
+        document.getElementById("redactedJson").textContent = redactedJsonText;
+        document.getElementById("markdownOut").textContent = md;
+
+        const nodes = Array.isArray(parsed?.nodes) ? parsed.nodes.length : 0;
+        document.getElementById("reportMeta").textContent = i18n[lang].reportMeta(options.level, nodes, report.length);
+        document.getElementById("reportTableWrap").innerHTML = renderReportTable(lang, report);
+        setPill("changesPill", i18n[lang].changes(report.length), true);
+
+        document.getElementById("emptyState").classList.add("hidden");
+        document.getElementById("report").classList.remove("hidden");
+
+        document.getElementById("copyJsonBtn").disabled = false;
+        document.getElementById("downloadJsonBtn").disabled = false;
+        document.getElementById("copyMdBtn").disabled = false;
+        document.getElementById("downloadMdBtn").disabled = false;
+
+        document.getElementById("copyJsonBtn").onclick = async () => {
+          await navigator.clipboard.writeText(redactedJsonText);
+          toast(i18n[lang].copied);
+        };
+        document.getElementById("copyMdBtn").onclick = async () => {
+          await navigator.clipboard.writeText(md);
+          toast(i18n[lang].copied);
+        };
+        document.getElementById("downloadJsonBtn").onclick = () => downloadText(redactedJsonText, "n8n-workflow-redacted.json", "application/json;charset=utf-8");
+        document.getElementById("downloadMdBtn").onclick = () => downloadText(md, "n8n-workflow-public-help.md", "text/markdown;charset=utf-8");
+      }
+
+      document.getElementById("redactBtn").addEventListener("click", doRedact);
+      document.getElementById("loadExampleBtn").addEventListener("click", () => {
+        loadExample();
+        doRedact();
+      });
+      document.getElementById("clearBtn").addEventListener("click", clearAll);
+
+      document.querySelectorAll(".lang-button").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const lang = btn.dataset.lang;
+          setLanguage(lang);
+          // re-render table headers if already rendered
+          if (!document.getElementById("report").classList.contains("hidden")) {
+            doRedact();
+          }
+        });
+      });
+
+      document.getElementById("fileInput").addEventListener("change", async (event) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        const text = await file.text();
+        document.getElementById("inputJson").value = text;
+        doRedact();
+      });
+
+      setLanguage(localStorage.getItem(storageKey) || "zh");
+    </script>
+
+    <style>
+      .hidden {
+        display: none;
+      }
+      .small {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .pill {
+        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.04);
+        padding: 8px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .pill-bad {
+        border-color: rgba(255, 91, 106, 0.65);
+        color: rgba(255, 91, 106, 0.95);
+      }
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow: hidden;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.03);
+      }
+      .table th,
+      .table td {
+        text-align: left;
+        padding: 10px 10px;
+        border-bottom: 1px solid var(--border);
+        vertical-align: top;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .table th {
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.04);
+        font-weight: 700;
+      }
+      code {
+        font-family: var(--mono);
+        color: var(--text);
+        font-size: 12px;
+      }
+      input,
+      select {
+        width: 100%;
+        border: 1px solid var(--border);
+        background: rgba(6, 10, 18, 0.4);
+        color: var(--text);
+        border-radius: 14px;
+        padding: 10px 12px;
+        font-size: 13px;
+      }
+    </style>
+  </body>
+</html>
+

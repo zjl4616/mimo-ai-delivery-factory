@@ -1,4 +1,4 @@
-:root {
+﻿:root {
   color-scheme: light;
   --ink: #141414;
   --muted: #5f625f;
@@ -498,6 +498,40 @@ h3 {
   .score-grid,
   .flow,
   .offer ul {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Tools section */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.card {
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+  border: 1px solid rgba(18, 18, 18, 0.18);
+  background: rgba(255, 255, 255, 0.72);
+  border-radius: 16px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.card strong {
+  font-size: 16px;
+}
+
+.card span {
+  color: rgba(18, 18, 18, 0.72);
+  line-height: 1.55;
+}
+
+@media (max-width: 900px) {
+  .cards {
     grid-template-columns: 1fr;
   }
 }

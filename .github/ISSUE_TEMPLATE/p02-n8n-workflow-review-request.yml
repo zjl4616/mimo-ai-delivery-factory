@@ -1,0 +1,72 @@
+﻿﻿name: "[P02] n8n workflow review request (sanitized)"
+description: "Public workflow review / refactor request. Please sanitize secrets before posting."
+title: "[P02] n8n workflow review request: <short goal>"
+labels: ["p02", "n8n", "public-lead"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for trying the **P02 n8n JSON 中文解释器**.
+
+        Important:
+        - This is a **public** issue. Do **not** paste credentials/tokens/PII.
+        - If your workflow contains secrets, please redact/sanitize first.
+        - I can reply with: a risk checklist + refactor suggestions + (optional) a fixed workflow JSON.
+
+  - type: input
+    id: goal
+    attributes:
+      label: Goal / desired outcome
+      description: "What should this workflow achieve?"
+      placeholder: "e.g. Auto-draft customer replies and log to Google Sheets"
+    validations:
+      required: true
+
+  - type: textarea
+    id: pain
+    attributes:
+      label: Current pain
+      description: "What's broken / slow / confusing / risky?"
+      placeholder: "e.g. retries missing, timeouts missing, secrets hardcoded, hard to explain to teammates"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: permission
+    attributes:
+      label: Permission to propose edits
+      description: "Choose how you want the response delivered."
+      options:
+        - "Checklist only (no JSON edits)"
+        - "Checklist + refactor plan"
+        - "Checklist + refactor plan + patched workflow JSON (sanitized)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: workflow
+    attributes:
+      label: Workflow JSON (sanitized)
+      description: "Paste your exported workflow JSON after sanitizing."
+      render: json
+    validations:
+      required: true
+
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints
+      description: "Tools, hosting, compliance, data sources, budget, must-use services."
+      placeholder: "e.g. must run on n8n cloud, no external DB, EU data residency"
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Safety checklist
+      options:
+        - label: "I confirmed there are no credentials/tokens/PII in the JSON."
+          required: true
+        - label: "I understand this issue is public and indexed."
+          required: true

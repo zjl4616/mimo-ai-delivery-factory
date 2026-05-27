@@ -1,0 +1,181 @@
+﻿{
+  "generatedAt": "2026-05-28T01:01:28+08:00",
+  "project": {
+    "name": "MiMo Token-To-Cash 30 天增长实验",
+    "goal": "让 MiMo 在 30 天内持续产出可交付产品、推广素材和销售资产，验证付款闭环。",
+    "publicSite": "https://1993921.xyz/mimo-ai-delivery-factory/",
+    "dashboard": "https://1993921.xyz/mimo-ai-delivery-factory/dashboard/",
+    "validUntil": "2026-06-27"
+  },
+  "health": {
+    "status": "healthy",
+    "label": "运行正常",
+    "latestRunAt": "2026-05-28T00:59:20+08:00",
+    "latestRunAgeMinutes": 2.1,
+    "cron": "*/30 * * * * server_loop.py",
+    "cronLogBytes": 0,
+    "serverLogBytes": 0
+  },
+  "metrics": {
+    "productsTotal": 7,
+    "productsOnline": 4,
+    "productsBuilding": 2,
+    "serverRuns": 5,
+    "promotionState": "素材已生成，尚未确认真实外部发布记录",
+    "revenueState": "暂无付款记录",
+    "git": {
+      "branch": "main",
+      "head": "a193b60"
+    }
+  },
+  "products": [
+    {
+      "id": "P01",
+      "name": "AI 自动化机会评分器",
+      "channel": "公开网页 / GitHub / SEO",
+      "status": "online",
+      "stage": "已上线",
+      "progress": 72,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/tools/automation-scorecard/",
+      "next": "增加导出报告、CTA，并启动公开推广。"
+    },
+    {
+      "id": "P02",
+      "name": "n8n JSON 中文解释器",
+      "channel": "GitHub / n8n 社区搜索流量",
+      "status": "online",
+      "stage": "已上线",
+      "progress": 85,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/tools/n8n-json-explainer/",
+      "next": "在公开渠道发布并用 Issue intake 收集真实样本。"
+    },
+    {
+      "id": "P03",
+      "name": "客户回复草稿生成器",
+      "channel": "搜索 / 外贸内容 / 公开页面",
+      "status": "queued",
+      "stage": "待构建",
+      "progress": 8,
+      "url": "",
+      "next": "做英文询盘与中文客服双场景 demo。"
+    },
+    {
+      "id": "P04",
+      "name": "自动化 ROI 单页生成器",
+      "channel": "公开页面 / 报价前工具",
+      "status": "queued",
+      "stage": "待并入 P01",
+      "progress": 12,
+      "url": "",
+      "next": "并入 P01 报告导出与报价前说明。"
+    },
+    {
+      "id": "P05",
+      "name": "小企业工作流模板包",
+      "channel": "Gumroad / Ko-fi / GitHub",
+      "status": "waiting",
+      "stage": "等待",
+      "progress": 5,
+      "url": "",
+      "next": "先做免费版 5 个模板。"
+    },
+    {
+      "id": "P06",
+      "name": "n8n Expression 报错排查助手（离线）",
+      "channel": "n8n 社区 / Reddit / GitHub（公开求助）",
+      "status": "online",
+      "stage": "已上线",
+      "progress": 55,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/tools/n8n-expression-triage/",
+      "next": "用 3-5 条公开回复把用户引导到脱敏模板 + GitHub Issue intake。"
+    },
+    {
+      "id": "P07",
+      "name": "n8n workflow JSON 脱敏器（离线）",
+      "channel": "n8n 社区 / Reddit / GitHub（公开求助）",
+      "status": "online",
+      "stage": "已上线",
+      "progress": 65,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/tools/n8n-workflow-redactor/",
+      "next": "在公开渠道发布 1 条主贴 + 3-5 条回复引流，收集 ≥1 个脱敏样本到 Issue intake。"
+    }
+  ],
+  "promotion": {
+    "status": "ready_not_published",
+    "label": "推广素材已准备，尚未记录正式外发",
+    "nextChannels": [
+      "GitHub README",
+      "n8n 相关公开讨论",
+      "技术社区长文",
+      "SEO 页面"
+    ],
+    "nextAction": "先发布 P02（离线+脱敏+Issue intake），用公开回复求助帖获取样本。"
+  },
+  "confirmationQueue": [
+    {
+      "type": "payment",
+      "status": "not_needed_yet",
+      "text": "出现付款意向后，需要用户确认收款账号、付款链接或二维码。"
+    }
+  ],
+  "recentRuns": [
+    {
+      "file": "20260528-005851-MiMo后台工厂输出.md",
+      "updatedAt": "2026-05-28T00:59:20+08:00",
+      "title": "标题：n8n 工作流分享/上线前，你需要一份安全与可靠性自检清单（附深度服务）",
+      "choice": "",
+      "paymentReady": "none"
+    },
+    {
+      "file": "20260528-002851-MiMo后台工厂输出.md",
+      "updatedAt": "2026-05-28T00:29:26+08:00",
+      "title": "标题：n8n 工作流分享/上线前，你需要一份安全与可靠性自检清单（附深度服务）",
+      "choice": "",
+      "paymentReady": "none"
+    },
+    {
+      "file": "20260527-235851-MiMo后台工厂输出.md",
+      "updatedAt": "2026-05-27T23:59:20+08:00",
+      "title": "标题：n8n 工作流分享前，如何快速自检安全与可靠性？",
+      "choice": "",
+      "paymentReady": "none"
+    },
+    {
+      "file": "20260527-232851-MiMo后台工厂输出.md",
+      "updatedAt": "2026-05-27T23:29:24+08:00",
+      "title": "MiMo 数字营销自动化解决方案 - 销售文案框架 (可直接使用)",
+      "choice": "",
+      "paymentReady": "none"
+    },
+    {
+      "file": "20260527-225851-MiMo后台工厂输出.md",
+      "updatedAt": "2026-05-27T22:59:21+08:00",
+      "title": "MiMo 数字营销助手 - 您的企业也需要自动化营销吗？",
+      "choice": "",
+      "paymentReady": "none"
+    }
+  ],
+  "safety": {
+    "publicSnapshot": true,
+    "containsSecrets": false,
+    "note": "状态文件只包含公开运营信息，不包含 Token、服务器密钥、私密客户资料或私人联系人。"
+  },
+  "runArtifacts": [
+    {
+      "id": "P02_REVIEW_KIT",
+      "title": "P02 public workflow review kit (docs + report template + reply scripts)",
+      "paths": [
+        "docs/p02-public-workflow-review-service.md",
+        "templates/p02-review-report-template.md",
+        "content/public/2026-05-27-p02-workflow-review-replies.md",
+        "content/public/2026-05-27-p02-sanitize-safety-post-and-replies.md",
+        "content/public/2026-05-28-p07-n8n-workflow-json-redactor-post-pack.md",
+        "leads/public/2026-05-27/p02-issue-tracker.md",
+        "leads/public/2026-05-27-public-target-list.md",
+        "leads/public/2026-05-28/p07-n8n-redaction-demand.md",
+        "experiments/2026-05-28/p07-offline-workflow-json-redactor.md",
+        "site/tools/n8n-workflow-redactor/index.html"
+      ]
+    }
+  ]
+}

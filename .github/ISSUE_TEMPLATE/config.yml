@@ -1,0 +1,9 @@
+﻿﻿blank_issues_enabled: false
+contact_links:
+  - name: P02 n8n JSON 中文解释器
+    url: https://1993921.xyz/mimo-ai-delivery-factory/tools/n8n-json-explainer/
+    about: Paste/upload workflow JSON, generate explanation + sanitizer locally.
+  - name: P06 n8n Expression 报错排查助手（离线）
+    url: https://1993921.xyz/mimo-ai-delivery-factory/tools/n8n-expression-triage/
+    about: Paste a sanitized expression + error and get triage suggestions locally.
+

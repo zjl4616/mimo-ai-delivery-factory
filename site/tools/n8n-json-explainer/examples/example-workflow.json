@@ -1,0 +1,83 @@
+﻿{
+    "settings":  {
+                     "executionOrder":  "v1"
+                 },
+    "name":  "Example: Gmail -\u003e Filter -\u003e Slack",
+    "connections":  {
+                        "Gmail Trigger":  {
+                                              "main":  [
+                                                           {
+                                                               "node":  "IF Has Attachment",
+                                                               "type":  "main",
+                                                               "index":  0
+                                                           }
+                                                       ]
+                                          },
+                        "IF Has Attachment":  {
+                                                  "main":  [
+                                                               [
+                                                                   {
+                                                                       "node":  "Slack Notify",
+                                                                       "type":  "main",
+                                                                       "index":  0
+                                                                   }
+                                                               ],
+                                                               [
+
+                                                               ]
+                                                           ]
+                                              }
+                    },
+    "nodes":  [
+                  {
+                      "id":  "1",
+                      "name":  "Gmail Trigger",
+                      "parameters":  {
+                                         "operation":  "watch",
+                                         "resource":  "message"
+                                     },
+                      "type":  "n8n-nodes-base.gmailTrigger",
+                      "position":  [
+                                       0,
+                                       0
+                                   ],
+                      "typeVersion":  1
+                  },
+                  {
+                      "id":  "2",
+                      "name":  "IF Has Attachment",
+                      "parameters":  {
+                                         "conditions":  {
+                                                            "boolean":  [
+                                                                            {
+                                                                                "value2":  true,
+                                                                                "value1":  "={{$json[\"hasAttachment\"]}}"
+                                                                            }
+                                                                        ]
+                                                        }
+                                     },
+                      "type":  "n8n-nodes-base.if",
+                      "position":  [
+                                       260,
+                                       0
+                                   ],
+                      "typeVersion":  1
+                  },
+                  {
+                      "id":  "3",
+                      "name":  "Slack Notify",
+                      "parameters":  {
+                                         "operation":  "post",
+                                         "channel":  "#alerts",
+                                         "resource":  "message",
+                                         "text":  "New email with attachment"
+                                     },
+                      "type":  "n8n-nodes-base.slack",
+                      "position":  [
+                                       520,
+                                       -120
+                                   ],
+                      "typeVersion":  1
+                  }
+              ]
+}

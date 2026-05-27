@@ -1,0 +1,691 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>n8n Expression 报错排查助手（离线）</title>
+    <meta
+      name="description"
+      content="离线分析 n8n Expression 报错：从错误信息+表达式片段推断原因与修复建议，并生成可公开求助的脱敏模板。"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="intro">
+        <p class="eyebrow">Public demand experiment P06</p>
+        <h1 data-i18n="title">n8n Expression 报错排查助手（离线）</h1>
+        <p class="lede" data-i18n="lede">
+          你不需要贴完整 workflow JSON：只粘贴错误信息 + expression 片段 + 节点上下文，本工具会给出 Top 5 原因与修复方向，并生成可公开求助的脱敏模板（全程本地运行，不联网）。
+        </p>
+        <div class="intro-actions">
+          <button id="loadExampleBtn" type="button" class="secondary" data-i18n="loadExample">加载示例</button>
+          <button id="clearBtn" type="button" class="secondary" data-i18n="clear">清空</button>
+          <div class="lang-switch" aria-label="Language switch">
+            <button id="langZhBtn" type="button" class="lang-button is-active" data-lang="zh">中文</button>
+            <button id="langEnBtn" type="button" class="lang-button" data-lang="en">EN</button>
+          </div>
+        </div>
+      </header>
+
+      <section class="grid">
+        <section class="panel">
+          <div class="panel-head">
+            <h2 data-i18n="inputTitle">输入</h2>
+            <div class="panel-actions">
+              <button id="analyzeBtn" type="button" class="primary" data-i18n="analyze">开始分析</button>
+            </div>
+          </div>
+
+          <label class="label">
+            <span data-i18n="errorLabel">Error message（粘贴）</span>
+            <textarea
+              id="errorInput"
+              spellcheck="false"
+              placeholder="例如：TypeError: Cannot read properties of undefined (reading 'toString')"
+            ></textarea>
+          </label>
+
+          <label class="label">
+            <span data-i18n="exprLabel">Expression 片段（可多行）</span>
+            <textarea
+              id="exprInput"
+              spellcheck="false"
+              placeholder="例如：{{ $json.foo.bar }}&#10;{{ $input.all().map(i => i.json.id) }}"
+            ></textarea>
+          </label>
+
+          <div class="row">
+            <label class="label">
+              <span data-i18n="contextLabel">节点上下文</span>
+              <select id="contextSelect">
+                <option value="set">Set / Edit Fields</option>
+                <option value="if">IF</option>
+                <option value="code">Code</option>
+                <option value="merge">Merge</option>
+                <option value="http">HTTP Request</option>
+                <option value="split">Split In Batches</option>
+                <option value="loop">Loop Over Items</option>
+                <option value="function">Function</option>
+                <option value="other">Other</option>
+              </select>
+            </label>
+
+            <label class="label">
+              <span data-i18n="shareModeLabel">公开求助模式</span>
+              <select id="shareModeSelect">
+                <option value="public" data-i18n="sharePublic">公开论坛（默认）</option>
+                <option value="internal" data-i18n="shareInternal">内部讨论（仍建议脱敏）</option>
+              </select>
+            </label>
+          </div>
+
+          <label class="label">
+            <span data-i18n="upLabel">上游 / 下游简述（可选）</span>
+            <input id="flowHintInput" type="text" placeholder="例如：HTTP Request -> IF -> Google Sheets" />
+          </label>
+
+          <label class="label">
+            <span data-i18n="jsonLabel">示例 $json 输出片段（可选，脱敏）</span>
+            <textarea
+              id="jsonInput"
+              spellcheck="false"
+              placeholder='例如：{ &quot;id&quot;: 123, &quot;status&quot;: &quot;ok&quot;, &quot;data&quot;: [] }'
+            ></textarea>
+          </label>
+
+          <div class="note">
+            <strong data-i18n="privacyTitle">隐私提醒</strong>
+            <p data-i18n="privacyBody">
+              请不要粘贴 token / API key / webhook URL / email / 电话 / 客户信息。本工具不会上传，但你可能会把报告贴到公开论坛。
+            </p>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <h2 data-i18n="outputTitle">输出</h2>
+            <div class="panel-actions">
+              <button id="copyMdBtn" type="button" class="secondary" data-i18n="copyReport" disabled>复制 Markdown</button>
+              <button id="downloadMdBtn" type="button" class="secondary" data-i18n="downloadReport" disabled>下载 Markdown</button>
+              <button id="copyIssueBtn" type="button" class="secondary" data-i18n="copyIssue" disabled>复制 GitHub Issue 模板</button>
+            </div>
+          </div>
+
+          <div id="emptyState" class="empty">
+            <p data-i18n="emptyHint">粘贴信息后点击“开始分析”，这里会出现原因、建议与可公开求助模板。</p>
+          </div>
+
+          <div id="report" class="report hidden">
+            <section class="block">
+              <h3 data-i18n="topCauses">Top 5 可能原因</h3>
+              <div id="causes"></div>
+            </section>
+
+            <section class="block">
+              <h3 data-i18n="fixes">修复建议</h3>
+              <div id="fixes"></div>
+            </section>
+
+            <section class="block">
+              <h3 data-i18n="asks">建议补充的最小信息</h3>
+              <div id="asks"></div>
+            </section>
+
+            <section class="block">
+              <h3 data-i18n="checklist">安全分享清单</h3>
+              <ul id="checklist" class="checklist"></ul>
+            </section>
+
+            <section class="block">
+              <h3 data-i18n="issue">GitHub Issue 内容（脱敏模板）</h3>
+              <pre id="issueText" class="code"></pre>
+            </section>
+
+            <section class="block">
+              <h3 data-i18n="md">Markdown 报告</h3>
+              <pre id="mdText" class="code"></pre>
+            </section>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script>
+      const storageKey = "mimoP06Lang";
+
+      const i18n = {
+        zh: {
+          title: "n8n Expression 报错排查助手（离线）",
+          lede: "你不需要贴完整 workflow JSON：只粘贴错误信息 + expression 片段 + 节点上下文，本工具会给出 Top 5 原因与修复方向，并生成可公开求助的脱敏模板（全程本地运行，不联网）。",
+          loadExample: "加载示例",
+          clear: "清空",
+          inputTitle: "输入",
+          analyze: "开始分析",
+          errorLabel: "Error message（粘贴）",
+          exprLabel: "Expression 片段（可多行）",
+          contextLabel: "节点上下文",
+          shareModeLabel: "公开求助模式",
+          sharePublic: "公开论坛（默认）",
+          shareInternal: "内部讨论（仍建议脱敏）",
+          upLabel: "上游 / 下游简述（可选）",
+          jsonLabel: "示例 $json 输出片段（可选，脱敏）",
+          privacyTitle: "隐私提醒",
+          privacyBody: "请不要粘贴 token / API key / webhook URL / email / 电话 / 客户信息。本工具不会上传，但你可能会把报告贴到公开论坛。",
+          outputTitle: "输出",
+          copyReport: "复制 Markdown",
+          downloadReport: "下载 Markdown",
+          copyIssue: "复制 GitHub Issue 模板",
+          emptyHint: "粘贴信息后点击“开始分析”，这里会出现原因、建议与可公开求助模板。",
+          topCauses: "Top 5 可能原因",
+          fixes: "修复建议",
+          asks: "建议补充的最小信息",
+          checklist: "安全分享清单",
+          issue: "GitHub Issue 内容（脱敏模板）",
+          md: "Markdown 报告",
+          copied: "已复制到剪贴板。",
+          tooEmpty: "请至少提供错误信息或 expression 片段。",
+        },
+        en: {
+          title: "n8n Expression Error Triage (Offline)",
+          lede: "You don’t need to share the full workflow JSON. Paste the error + expression snippet + context, and this tool suggests top causes and fixes, then generates a safe public-help template (runs locally, offline).",
+          loadExample: "Load example",
+          clear: "Clear",
+          inputTitle: "Input",
+          analyze: "Analyze",
+          errorLabel: "Error message (paste)",
+          exprLabel: "Expression snippet(s) (multi-line)",
+          contextLabel: "Node context",
+          shareModeLabel: "Sharing mode",
+          sharePublic: "Public forum (default)",
+          shareInternal: "Internal (still sanitize)",
+          upLabel: "Upstream / downstream hint (optional)",
+          jsonLabel: "Sample $json snippet (optional, sanitized)",
+          privacyTitle: "Privacy note",
+          privacyBody:
+            "Do NOT paste tokens / API keys / webhook URLs / emails / phone numbers / customer data. This tool stays local, but you may post the report publicly.",
+          outputTitle: "Output",
+          copyReport: "Copy Markdown",
+          downloadReport: "Download Markdown",
+          copyIssue: "Copy GitHub issue template",
+          emptyHint: "Paste input then click Analyze to see causes, fixes, and a safe public-help template.",
+          topCauses: "Top 5 likely causes",
+          fixes: "Fix suggestions",
+          asks: "Minimal info to ask next",
+          checklist: "Safe-share checklist",
+          issue: "GitHub issue content (sanitized template)",
+          md: "Markdown report",
+          copied: "Copied to clipboard.",
+          tooEmpty: "Please provide at least an error message or expression snippet.",
+        },
+      };
+
+      const contextMeta = {
+        set: { tags: ["set", "editFields"] },
+        if: { tags: ["if"] },
+        code: { tags: ["code"] },
+        merge: { tags: ["merge"] },
+        http: { tags: ["http"] },
+        split: { tags: ["split", "batches"] },
+        loop: { tags: ["loop"] },
+        function: { tags: ["function"] },
+        other: { tags: ["other"] },
+      };
+
+      const rules = [
+        {
+          id: "null-undefined-field-access",
+          title: {
+            zh: "访问不存在字段（undefined/null）",
+            en: "Accessing missing fields (undefined/null)",
+          },
+          errorRegex: [/cannot read properties of (undefined|null)/i, /reading ['"][^'"]+['"]/i],
+          exprRegex: [/\$json\./i, /\$item\.json\./i, /\$\([^)]+\)\./i],
+          tags: ["set", "if", "code", "merge", "http", "other"],
+          fixes: [
+            {
+              zh: "先确认上游输出结构：在上游加一个 Set/Edit Fields 只输出 `{{ $json }}`（脱敏后截图/复制）。",
+              en: "Confirm upstream data shape: add a Set/Edit Fields node to output only `{{ $json }}` (sanitize before sharing).",
+              example: "{{ $json.foo ?? null }}",
+            },
+            {
+              zh: "给可能缺失字段加默认值：`{{ $json.foo?.bar ?? \"\" }}`（按 n8n 版本语法调整）。",
+              en: "Add defaults for missing fields: `{{ $json.foo?.bar ?? \"\" }}` (adjust syntax for your n8n version).",
+              example: "{{ ($json.data && $json.data.id) ? $json.data.id : '' }}",
+            },
+          ],
+          asks: [
+            { zh: "上游节点类型是什么？（HTTP Request / Merge / Code 等）", en: "What is the upstream node type? (HTTP Request / Merge / Code, etc.)" },
+            { zh: "报错节点的字段路径是什么？（例如 `$json.customer.email`）", en: "What exact field path is failing? (e.g. `$json.customer.email`)" },
+          ],
+        },
+        {
+          id: "string-method-on-null",
+          title: { zh: "对空值调用 string 方法（trim/toString/startsWith）", en: "Calling string methods on null/undefined (trim/toString/startsWith)" },
+          errorRegex: [/reading ['"](trim|tostring|startswith)['"]/i],
+          exprRegex: [/\.(trim|toString|startsWith)\(/i],
+          tags: ["set", "if", "code", "other"],
+          fixes: [
+            {
+              zh: "先转为字符串并提供默认值：`{{ String($json.foo ?? \"\").trim() }}`。",
+              en: "Coerce to string with a default: `{{ String($json.foo ?? \"\").trim() }}`.",
+              example: "{{ String($json.name ?? '').trim() }}",
+            },
+            {
+              zh: "如果字段可能是 number/object，先做类型判断或 JSON.stringify。",
+              en: "If the field may be number/object, type-check or use JSON.stringify first.",
+              example: "{{ typeof $json.foo === 'string' ? $json.foo.trim() : JSON.stringify($json.foo ?? '') }}",
+            },
+          ],
+          asks: [
+            { zh: "被调用 `.trim()` 的字段原本应该是什么类型？", en: "What type should the `.trim()` field be?" },
+            { zh: "上游是否可能返回空值或空数组？", en: "Can upstream return null/empty arrays?" },
+          ],
+        },
+        {
+          id: "wrong-scope-input",
+          title: { zh: "使用了错误的数据作用域（$json vs $item.json vs $input）", en: "Wrong data scope ($json vs $item.json vs $input)" },
+          errorRegex: [/could not resolve expression/i, /the expression is not valid/i, /undefined/i],
+          exprRegex: [/\$input\./i, /\$item\.json/i, /\$json\./i],
+          tags: ["split", "loop", "code", "function", "other"],
+          fixes: [
+            {
+              zh: "在循环/批处理里：优先用 `$item.json` 处理当前 item；在 Code node 里可用 `$input.all()` 拿到全部 items。",
+              en: "Inside loops/batches: use `$item.json` for current item; in Code node use `$input.all()` to get all items.",
+              example: "{{ $item.json.id }}",
+            },
+            {
+              zh: "要引用某个节点的输出：使用 `$('Node Name').first().json.field`（注意节点名必须完全一致）。",
+              en: "To reference another node output: use `$('Node Name').first().json.field` (node name must match exactly).",
+              example: "{{ $('HTTP Request').first().json.data }}",
+            },
+          ],
+          asks: [
+            { zh: "报错节点是否在 Split In Batches / Loop Over Items 之中？", en: "Is the failing node inside Split In Batches / Loop Over Items?" },
+            { zh: "你希望拿的是“当前 item”还是“全部 items/最后一个 item”？", en: "Do you need the current item, or all items / the last item?" },
+          ],
+        },
+        {
+          id: "wrong-node-reference",
+          title: { zh: "节点名引用错误/分支不一致", en: "Wrong node reference / branch mismatch" },
+          errorRegex: [/could not resolve/i, /node/i],
+          exprRegex: [/\$\(['"][^'"]+['"]\)/i, /\$\(\s*['"][^'"]+['"]\s*\)\./i],
+          tags: ["set", "if", "merge", "other"],
+          fixes: [
+            {
+              zh: "确认节点名是否改过、是否有同名节点；复制节点名而不是手打。",
+              en: "Ensure node name matches exactly (and no duplicates). Copy the node name instead of typing.",
+              example: "{{ $('Some Node').first().json }}",
+            },
+            {
+              zh: "如果是 Merge/多分支：确认 expression 运行在正确分支输入上（必要时先把数据合并成单一路径）。",
+              en: "For Merge/multi-branch: make sure the expression runs on the intended input branch; consider merging earlier.",
+              example: "{{ $input.first().json }}",
+            },
+          ],
+          asks: [
+            { zh: "是否存在同名节点？（例如两个 'Set'）", en: "Do you have duplicate node names? (e.g. two 'Set')" },
+            { zh: "是否涉及 IF/Merge 导致分支里没有数据？", en: "Is an IF/Merge branch empty (no items)?" },
+          ],
+        },
+        {
+          id: "non-json-http-response",
+          title: { zh: "HTTP 响应不是 JSON / 结构变化", en: "HTTP response not JSON / shape changed" },
+          errorRegex: [/unexpected token/i, /json/i, /cannot read properties/i],
+          exprRegex: [/\$json\./i],
+          tags: ["http", "set", "if", "code", "other"],
+          fixes: [
+            {
+              zh: "检查 HTTP Request 是否设置为 JSON 响应；必要时把响应包一层 `data` 或用 Code node 解析。",
+              en: "Verify HTTP Request response is JSON; if needed wrap under `data` or parse in a Code node.",
+              example: "{{ $json.data ?? $json }}",
+            },
+            {
+              zh: "在后续节点引用前，先用 Set 只保留需要字段，避免对深层结构直接硬编码。",
+              en: "Before referencing deep paths, use Set to keep only needed fields to avoid brittle deep access.",
+              example: "{{ $json.user?.email ?? '' }}",
+            },
+          ],
+          asks: [
+            { zh: "错误发生在 HTTP Request 之后吗？HTTP 返回头/状态码是否稳定？", en: "Does it happen after HTTP Request? Is status code stable?" },
+            { zh: "能否提供一条脱敏后的 `$json` 样例（只要 1 个 item）？", en: "Can you share one sanitized `$json` sample (just 1 item)?" },
+          ],
+        },
+      ];
+
+      function escapeMd(value) {
+        return String(value || "").replace(/\\/g, "\\\\").replace(/`/g, "\\`");
+      }
+
+      function normalizeText(text) {
+        return String(text || "").trim();
+      }
+
+      function scoreRule(rule, input) {
+        const error = input.error.toLowerCase();
+        const expr = input.expr.toLowerCase();
+        let score = 0;
+
+        for (const r of rule.errorRegex) {
+          if (r.test(error)) score += 3;
+        }
+        for (const r of rule.exprRegex) {
+          if (r.test(expr)) score += 2;
+        }
+        if (rule.tags.includes(input.contextTag)) score += 1;
+
+        const jsonHint = input.json.toLowerCase();
+        if (jsonHint && /\[\s*\]/.test(jsonHint)) score += 1;
+        if (jsonHint && /null/.test(jsonHint)) score += 1;
+        if (jsonHint && /undefined/.test(jsonHint)) score += 1;
+
+        return score;
+      }
+
+      function confidenceLabel(score) {
+        if (score >= 7) return { level: "high", pct: 0.8 };
+        if (score >= 5) return { level: "medium", pct: 0.6 };
+        if (score >= 3) return { level: "low", pct: 0.4 };
+        return { level: "low", pct: 0.25 };
+      }
+
+      function buildChecklist(lang, shareMode) {
+        const common = [
+          {
+            zh: "移除/替换 token、API key、webhook URL、邮箱、电话、客户数据。",
+            en: "Remove/replace tokens, API keys, webhook URLs, emails, phone numbers, customer data.",
+          },
+          {
+            zh: "保留：完整错误文本、expression 片段、节点类型、最小上游输出结构（脱敏）。",
+            en: "Keep: full error text, expression snippet, node types, minimal upstream output shape (sanitized).",
+          },
+          {
+            zh: "如果贴 `$json` 样例：只贴 1 条 item，且删掉所有敏感字段。",
+            en: "If sharing a `$json` sample: share only 1 item and remove sensitive fields.",
+          },
+        ];
+        const publicOnly = [
+          {
+            zh: "不要粘贴完整 workflow JSON（除非你已彻底清除 credentials + 私有 URL）。",
+            en: "Avoid posting full workflow JSON unless you fully removed credentials + private URLs.",
+          },
+          {
+            zh: "优先用本页生成的 GitHub issue 模板，把敏感值写成 [REDACTED]。",
+            en: "Use the GitHub issue template below and replace secrets with [REDACTED].",
+          },
+        ];
+        const items = shareMode === "public" ? common.concat(publicOnly) : common;
+        return items.map((i) => (lang === "zh" ? i.zh : i.en));
+      }
+
+      function buildMarkdown(lang, input, top) {
+        const t = i18n[lang];
+        const contextLabel = document.querySelector(`#contextSelect option[value=\"${input.contextTag}\"]`)?.textContent || input.contextTag;
+        const lines = [];
+        lines.push(`# ${t.title}`);
+        lines.push("");
+        lines.push(`## Input`);
+        lines.push(`- Context: ${escapeMd(contextLabel)}`);
+        lines.push(`- Flow hint: ${escapeMd(input.flowHint || "—")}`);
+        lines.push("");
+        if (input.error) {
+          lines.push("### Error message");
+          lines.push("```");
+          lines.push(input.error);
+          lines.push("```");
+          lines.push("");
+        }
+        if (input.expr) {
+          lines.push("### Expression snippet(s)");
+          lines.push("```");
+          lines.push(input.expr);
+          lines.push("```");
+          lines.push("");
+        }
+        if (input.json) {
+          lines.push("### $json sample (sanitized)");
+          lines.push("```json");
+          lines.push(input.json);
+          lines.push("```");
+          lines.push("");
+        }
+        lines.push(`## ${t.topCauses}`);
+        for (const item of top) {
+          lines.push(`- **${escapeMd(item.title)}** (${Math.round(item.confidence.pct * 100)}%)`);
+        }
+        lines.push("");
+        lines.push(`## ${t.fixes}`);
+        for (const item of top) {
+          lines.push(`### ${escapeMd(item.title)}`);
+          for (const fix of item.fixes) {
+            lines.push(`- ${escapeMd(fix.text)}`);
+            if (fix.example) lines.push(`  - Example: \`${escapeMd(fix.example)}\``);
+          }
+          lines.push("");
+        }
+        lines.push(`## ${t.asks}`);
+        const mergedAsks = [];
+        for (const item of top) {
+          for (const ask of item.asks) mergedAsks.push(ask);
+        }
+        const unique = Array.from(new Set(mergedAsks)).slice(0, 8);
+        for (const ask of unique) lines.push(`- ${escapeMd(ask)}`);
+        lines.push("");
+        lines.push(`## ${t.checklist}`);
+        for (const c of buildChecklist(lang, input.shareMode)) lines.push(`- ${escapeMd(c)}`);
+        lines.push("");
+        lines.push("> Note: Suggestions are heuristic and depend on your n8n version. Validate with n8n docs and minimal repro.");
+        lines.push("");
+        return lines.join("\n");
+      }
+
+      function buildIssue(lang, input, top) {
+        const contextLabel = document.querySelector(`#contextSelect option[value=\"${input.contextTag}\"]`)?.textContent || input.contextTag;
+        const lines = [];
+        lines.push(`### n8n Expression help request (sanitized)`);
+        lines.push("");
+        lines.push(`**Context**: ${contextLabel}`);
+        lines.push(`**Flow hint**: ${input.flowHint || "—"}`);
+        lines.push("");
+        lines.push("**Error message**");
+        lines.push("```");
+        lines.push(input.error || "(none)");
+        lines.push("```");
+        lines.push("");
+        lines.push("**Expression snippet(s)**");
+        lines.push("```");
+        lines.push(input.expr || "(none)");
+        lines.push("```");
+        lines.push("");
+        if (input.json) {
+          lines.push("**$json sample (sanitized)**");
+          lines.push("```json");
+          lines.push(input.json);
+          lines.push("```");
+          lines.push("");
+        }
+        lines.push("**What I tried / what I expect**");
+        lines.push("- Expectation: ...");
+        lines.push("- What happened: ...");
+        lines.push("");
+        lines.push("**Triage tool suggestions (offline)**");
+        for (const item of top) lines.push(`- ${item.title} (~${Math.round(item.confidence.pct * 100)}%)`);
+        lines.push("");
+        lines.push("**Safe-share checklist**");
+        for (const c of buildChecklist(lang, "public")) lines.push(`- ${c}`);
+        lines.push("");
+        lines.push("_Generated by MiMo offline triage tool. Replace any accidental sensitive values with [REDACTED]._");
+        return lines.join("\n");
+      }
+
+      function setLanguage(lang) {
+        document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
+        const dict = i18n[lang];
+        document.querySelectorAll("[data-i18n]").forEach((el) => {
+          el.textContent = dict[el.dataset.i18n];
+        });
+        document.querySelectorAll(".lang-button").forEach((b) => b.classList.toggle("is-active", b.dataset.lang === lang));
+        localStorage.setItem(storageKey, lang);
+      }
+
+      function renderResult(lang, input, scored) {
+        const dict = i18n[lang];
+        const causes = document.getElementById("causes");
+        const fixes = document.getElementById("fixes");
+        const asks = document.getElementById("asks");
+        const checklist = document.getElementById("checklist");
+        causes.innerHTML = "";
+        fixes.innerHTML = "";
+        asks.innerHTML = "";
+        checklist.innerHTML = "";
+
+        for (const item of scored) {
+          const cause = document.createElement("article");
+          cause.className = "cause";
+          const pct = Math.round(item.confidence.pct * 100);
+          cause.innerHTML = `<div class=\"cause-head\"><strong>${item.title}</strong><span class=\"pill is-${item.confidence.level}\">${pct}%</span></div><p>${item.summary}</p>`;
+          causes.appendChild(cause);
+
+          const fixBlock = document.createElement("article");
+          fixBlock.className = "fix";
+          const fixLis = item.fixes
+            .map((f) => `<li>${f.text}${f.example ? `<div class=\"example\"><code>${f.example}</code></div>` : ""}</li>`)
+            .join("");
+          fixBlock.innerHTML = `<h4>${item.title}</h4><ul class=\"list\">${fixLis}</ul>`;
+          fixes.appendChild(fixBlock);
+
+          const askBlock = document.createElement("article");
+          askBlock.className = "ask";
+          askBlock.innerHTML = `<h4>${item.title}</h4><ul class=\"list\">${item.asks.map((a) => `<li>${a}</li>`).join("")}</ul>`;
+          asks.appendChild(askBlock);
+        }
+
+        buildChecklist(lang, input.shareMode).forEach((line) => {
+          const li = document.createElement("li");
+          li.textContent = line;
+          checklist.appendChild(li);
+        });
+
+        const md = buildMarkdown(lang, input, scored);
+        const issue = buildIssue(lang, input, scored);
+        document.getElementById("mdText").textContent = md;
+        document.getElementById("issueText").textContent = issue;
+
+        document.getElementById("emptyState").classList.add("hidden");
+        document.getElementById("report").classList.remove("hidden");
+
+        document.getElementById("copyMdBtn").disabled = false;
+        document.getElementById("downloadMdBtn").disabled = false;
+        document.getElementById("copyIssueBtn").disabled = false;
+
+        document.getElementById("copyMdBtn").onclick = async () => {
+          await navigator.clipboard.writeText(md);
+          toast(dict.copied);
+        };
+        document.getElementById("copyIssueBtn").onclick = async () => {
+          await navigator.clipboard.writeText(issue);
+          toast(dict.copied);
+        };
+        document.getElementById("downloadMdBtn").onclick = () => downloadText(md, "n8n-expression-triage-report.md");
+      }
+
+      function toast(text) {
+        const el = document.createElement("div");
+        el.className = "toast";
+        el.textContent = text;
+        document.body.appendChild(el);
+        setTimeout(() => el.classList.add("is-on"), 10);
+        setTimeout(() => {
+          el.classList.remove("is-on");
+          setTimeout(() => el.remove(), 250);
+        }, 2200);
+      }
+
+      function downloadText(text, filename) {
+        const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      }
+
+      function analyze() {
+        const lang = localStorage.getItem(storageKey) || "zh";
+        const error = normalizeText(document.getElementById("errorInput").value);
+        const expr = normalizeText(document.getElementById("exprInput").value);
+        const contextTag = document.getElementById("contextSelect").value;
+        const flowHint = normalizeText(document.getElementById("flowHintInput").value);
+        const json = normalizeText(document.getElementById("jsonInput").value);
+        const shareMode = document.getElementById("shareModeSelect").value;
+
+        if (!error && !expr) {
+          toast(i18n[lang].tooEmpty);
+          return;
+        }
+
+        const input = { error, expr, contextTag, flowHint, json, shareMode };
+        const ranked = rules
+          .map((rule) => {
+            const score = scoreRule(rule, input);
+            return { rule, score, confidence: confidenceLabel(score) };
+          })
+          .sort((a, b) => b.score - a.score)
+          .slice(0, 5)
+          .map((row) => {
+            const title = lang === "zh" ? row.rule.title.zh : row.rule.title.en;
+            const summary =
+              lang === "zh"
+                ? "根据错误关键词 + expression 形态 + 节点上下文的启发式匹配。"
+                : "Heuristic match from error keywords + expression shape + node context.";
+            const fixes = row.rule.fixes.map((f) => ({
+              text: lang === "zh" ? f.zh : f.en,
+              example: f.example || "",
+            }));
+            const asks = row.rule.asks.map((a) => (lang === "zh" ? a.zh : a.en));
+            return { id: row.rule.id, title, summary, confidence: row.confidence, fixes, asks };
+          });
+
+        renderResult(lang, input, ranked);
+      }
+
+      function loadExample() {
+        document.getElementById("errorInput").value = "TypeError: Cannot read properties of null (reading 'trim')";
+        document.getElementById("exprInput").value = "{{ $json.customer_name.trim() }}\\n{{ $json.email.toString() }}";
+        document.getElementById("contextSelect").value = "set";
+        document.getElementById("flowHintInput").value = "HTTP Request -> Set -> Gmail";
+        document.getElementById("jsonInput").value = '{\"customer_name\": null, \"email\": 123, \"status\": \"ok\"}';
+        document.getElementById("shareModeSelect").value = "public";
+      }
+
+      function clearAll() {
+        document.getElementById("errorInput").value = "";
+        document.getElementById("exprInput").value = "";
+        document.getElementById("flowHintInput").value = "";
+        document.getElementById("jsonInput").value = "";
+        document.getElementById("emptyState").classList.remove("hidden");
+        document.getElementById("report").classList.add("hidden");
+        document.getElementById("copyMdBtn").disabled = true;
+        document.getElementById("downloadMdBtn").disabled = true;
+        document.getElementById("copyIssueBtn").disabled = true;
+      }
+
+      document.getElementById("analyzeBtn").addEventListener("click", analyze);
+      document.getElementById("loadExampleBtn").addEventListener("click", () => {
+        loadExample();
+        analyze();
+      });
+      document.getElementById("clearBtn").addEventListener("click", clearAll);
+
+      document.querySelectorAll(".lang-button").forEach((btn) => {
+        btn.addEventListener("click", () => setLanguage(btn.dataset.lang));
+      });
+
+      setLanguage(localStorage.getItem(storageKey) || "zh");
+    </script>
+  </body>
+</html>
+
