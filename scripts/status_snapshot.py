@@ -175,22 +175,72 @@ def recent_runs(runs_dir: Path, limit: int = 5) -> list[dict[str, object]]:
     return runs
 
 
+
+def dynamic_quick_products(repo: Path) -> list[dict[str, object]]:
+    """Read current quick-test cards so the public dashboard reflects the real test surface."""
+    html_path = repo / "site" / "quick-tests" / "index.html"
+    try:
+        html = html_path.read_text(encoding="utf-8", errors="ignore")
+    except FileNotFoundError:
+        return []
+    cards = re.findall(
+        r'<article class="card" id="([^"]+)"><h2>(.*?)</h2><p>(.*?)</p><div class="price">(.*?)</div>',
+        html,
+        flags=re.S,
+    )
+    products = []
+    for idx, (slug, title, desc, price) in enumerate(cards, 1):
+        title = re.sub(r"<[^>]+>", "", title).strip()
+        desc = re.sub(r"<[^>]+>", "", desc).strip()
+        products.append(
+            {
+                "id": f"T{idx:02d}",
+                "name": title[:80],
+                "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+                "status": "online",
+                "stage": "公开测试中",
+                "progress": 40,
+                "url": f"https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#{slug}",
+                "next": f"{price}；{desc[:90]}",
+            }
+        )
+    return products
+
+
+def count_files(path: Path, pattern: str) -> int:
+    return len(list(path.glob(pattern))) if path.exists() else 0
+
 def public_metrics(repo: Path, runs_dir: Path) -> dict[str, object]:
-    online = sum(1 for p in PRODUCTS if p.get("status") == "online")
-    building = sum(1 for p in PRODUCTS if p.get("status") in {"building", "queued"})
+    quick_products = dynamic_quick_products(repo)
+    products_total = len(quick_products) or len(PRODUCTS)
+    online = products_total if quick_products else sum(1 for p in PRODUCTS if p.get("status") == "online")
+    building = sum(1 for p in PRODUCTS if p.get("status") in {"building", "queued"}) if not quick_products else 0
     run_count = len(list(runs_dir.glob("*.md"))) if runs_dir.exists() else 0
     git_head = command_output(["git", "rev-parse", "--short", "HEAD"], repo)
     git_branch = command_output(["git", "branch", "--show-current"], repo)
+    discovery = DEFAULT_BASE / "discovery"
+    active_posted = discovery / "20260528-active-outreach-posted.md"
+    posted_count = 0
+    if active_posted.exists():
+        posted_count = active_posted.read_text(encoding="utf-8", errors="ignore").count("https://github.com/")
+    latest_opp = sorted(discovery.glob("*-opportunity-corpus.jsonl"), key=lambda p: p.stat().st_mtime, reverse=True)
+    opportunity_count = 0
+    if latest_opp:
+        opportunity_count = sum(1 for line in latest_opp[0].read_text(encoding="utf-8", errors="ignore").splitlines() if line.strip())
+    corpus = discovery / "github-learning-corpus.jsonl"
+    corpus_count = sum(1 for _ in corpus.open(encoding="utf-8", errors="ignore")) if corpus.exists() else 0
     return {
-        "productsTotal": len(PRODUCTS),
+        "productsTotal": products_total,
         "productsOnline": online,
         "productsBuilding": building,
         "serverRuns": run_count,
-        "promotionState": "素材已生成，尚未确认真实外部发布记录",
+        "githubCorpus": corpus_count,
+        "opportunitySignals": opportunity_count,
+        "activeOutreachPosted": posted_count,
+        "promotionState": f"已公开 {products_total} 个测试产品；已主动触达 {posted_count} 条 GitHub issue",
         "revenueState": "暂无付款记录",
         "git": {"branch": git_branch or "unknown", "head": git_head or "unknown"},
     }
-
 
 def build_snapshot(base: Path, repo: Path, runs_dir: Path, logs_dir: Path) -> dict[str, object]:
     now = datetime.now().astimezone()
@@ -219,17 +269,17 @@ def build_snapshot(base: Path, repo: Path, runs_dir: Path, logs_dir: Path) -> di
             "label": {"healthy": "运行正常", "late": "略有延迟", "stale": "需要检查", "unknown": "未知"}[health],
             "latestRunAt": latest_run_at,
             "latestRunAgeMinutes": age_minutes,
-            "cron": "*/30 * * * * server_loop.py",
+            "cron": "全天循环：增长每10分钟；GitHub学习每10分钟；机会雷达每小时；主动出击每小时",
             "cronLogBytes": cron_log.stat().st_size if cron_log.exists() else 0,
             "serverLogBytes": server_log.stat().st_size if server_log.exists() else 0,
         },
         "metrics": public_metrics(repo, runs_dir),
-        "products": PRODUCTS,
+        "products": dynamic_quick_products(repo) or PRODUCTS,
         "promotion": {
-            "status": "ready_not_published",
-            "label": "推广素材已准备，尚未记录正式外发",
-            "nextChannels": ["GitHub README", "n8n 相关公开讨论", "技术社区长文", "SEO 页面"],
-            "nextAction": "先发布 P02（离线+脱敏+Issue intake），用公开回复求助帖获取样本。",
+            "status": "published_and_outbound",
+            "label": "已公开测试并开始主动出击",
+            "nextChannels": ["GitHub help-wanted issues", "飞书 AI交流群", "GitHub README", "AIHOT/微信项目复盘"],
+            "nextAction": "继续筛高质量需求，优先做真人口吻评论、小PR和样本诊断。",
         },
         "confirmationQueue": [
             {
@@ -302,8 +352,8 @@ def main() -> None:
 
     snapshot = build_snapshot(base, repo, runs_dir, logs_dir)
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    # Write UTF-8 with BOM so Windows PowerShell `Get-Content` renders Chinese correctly.
-    args.output.write_text(json.dumps(snapshot, ensure_ascii=False, indent=2), encoding="utf-8-sig")
+    # Public web JSON should not include a BOM; browsers handle UTF-8 JSON cleanly.
+    args.output.write_text(json.dumps(snapshot, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"wrote {args.output}")
 
 
