@@ -192,16 +192,44 @@ def dynamic_quick_products(repo: Path) -> list[dict[str, object]]:
     for idx, (slug, title, desc, price) in enumerate(cards, 1):
         title = re.sub(r"<[^>]+>", "", title).strip()
         desc = re.sub(r"<[^>]+>", "", desc).strip()
+        # Not every public card is equally useful. Keep the dashboard honest:
+        # - validated: has real outbound touches or a clear buyer path
+        # - testing: public intake exists, waiting for signal
+        # - seed: only a hypothesis / needs a lead magnet or first touch
+        validated_slugs = {
+            "ai-customer-support-audit",
+            "foreign-trade-inquiry-automation",
+            "ai-content-safety-review",
+            "lead-data-cleaning",
+            "n8n-expression-fix",
+            "n8n-workflow-security",
+            "n8n-performance-tune",
+            "mcp-server-quickstart",
+            "agent-workflow-sandbox",
+            "ai-10-dollar-product-builder",
+            "digital-product-packaging-audit",
+            "api-cost-stability-audit",
+        }
+        seed_markers = ("radar-",)
+        if slug in validated_slugs:
+            status, stage, progress = "validated", "重点测试", 65
+            next_text = "已有明确买家痛点，优先主动沟通/补免费诱饵/争取样本。"
+        elif slug.startswith(seed_markers):
+            status, stage, progress = "seed", "机会种子", 25
+            next_text = "先保留入口；需要补清单、模板或第一条主动触达后再升级。"
+        else:
+            status, stage, progress = "testing", "公开测试", 45
+            next_text = "观察点击、Issue、私聊和样本提交；有信号再放大。"
         products.append(
             {
                 "id": f"T{idx:02d}",
                 "name": title[:80],
                 "channel": "快速测试页 / GitHub Issue intake / 主动出击",
-                "status": "online",
-                "stage": "公开测试中",
-                "progress": 40,
+                "status": status,
+                "stage": stage,
+                "progress": progress,
                 "url": f"https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#{slug}",
-                "next": f"{price}；{desc[:90]}",
+                "next": f"{next_text} {price}；{desc[:70]}",
             }
         )
     return products
