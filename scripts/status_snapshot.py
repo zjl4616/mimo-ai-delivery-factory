@@ -304,6 +304,7 @@ def build_snapshot(base: Path, repo: Path, runs_dir: Path, logs_dir: Path) -> di
         "metrics": public_metrics(repo, runs_dir),
         "products": dynamic_quick_products(repo) or PRODUCTS,
         "demos": {"count": len(list((repo / "site" / "demos").glob("*.html"))) - (1 if (repo / "site" / "demos" / "index.html").exists() else 0), "url": "https://1993921.xyz/mimo-ai-delivery-factory/demos/"},
+        "complete_products": {"count": len(list((repo / "site" / "products").glob("*/index.html"))), "url": "https://1993921.xyz/mimo-ai-delivery-factory/products/"},
         "promotion": {
             "status": "published_and_outbound",
             "label": "已公开测试并开始主动出击",
