@@ -1,0 +1,71 @@
+name: "[Money] Lead cleaning + WhatsApp opener sample"
+description: "Submit a sanitized B2B/export lead sample for cleaning, scoring, and follow-up copy. Public issue; do not post private data."
+title: "[Lead sample] <industry / country / source>"
+labels: ["money-lead", "lead-cleaning", "public-lead"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Submit a **small sanitized sample** only. Do not post private customer data, passwords, tokens, contracts, or personal phone numbers.
+
+        Paid offer after sample review:
+        - ¥199 / 100 rows starter cleanup
+        - ¥699 / 500 rows cleanup + A/B/C lead scoring
+        - ¥1299 / 1000 rows cleanup + WhatsApp/email opener drafts
+
+  - type: input
+    id: role
+    attributes:
+      label: Your role / business
+      placeholder: "e.g. export sales, factory owner, B2B agency, Shopify seller"
+    validations:
+      required: true
+
+  - type: input
+    id: source
+    attributes:
+      label: Lead source
+      placeholder: "e.g. trade fair CSV, Google Maps, Apollo export, WhatsApp list"
+    validations:
+      required: true
+
+  - type: textarea
+    id: sample
+    attributes:
+      label: Sanitized sample rows
+      description: "Paste 5-20 rows with fake/anonymized names if needed. Keep only field structure and typical messiness."
+      placeholder: |
+        company,country,website,raw_contact,note
+        Example Co,DE,example.com,+49***,asks glass bottle MOQ
+    validations:
+      required: true
+
+  - type: textarea
+    id: goal
+    attributes:
+      label: What output do you want?
+      placeholder: "dedupe, country normalization, industry tag, A/B/C score, WhatsApp opener, email subject..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: budget
+    attributes:
+      label: If the sample is useful, which starter package fits?
+      options:
+        - "¥199 / 100 rows"
+        - "¥699 / 500 rows"
+        - "¥1299 / 1000 rows"
+        - "Need custom quote"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: public_safety
+    attributes:
+      label: Public safety
+      options:
+        - label: "I removed private personal data / credentials / sensitive customer information."
+          required: true
+        - label: "I understand this is a public GitHub issue."
+          required: true

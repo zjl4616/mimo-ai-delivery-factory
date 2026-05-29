@@ -1,0 +1,63 @@
+name: "[Money] Customer FAQ + sales copy sample"
+description: "Submit sanitized product/customer question examples for FAQ and sales reply drafting. Public issue; do not post private data."
+title: "[FAQ sample] <product / store / channel>"
+labels: ["money-lead", "faq-copy", "public-lead"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Public sample only. Do not post customer private data.
+
+        Paid offer after sample review:
+        - ¥299 basic FAQ + reply pack
+        - ¥999 product sales script + objection handling
+        - ¥2999 automation-ready knowledge base / workflow setup
+
+  - type: input
+    id: product
+    attributes:
+      label: Product / service
+      placeholder: "e.g. glass bottles, Shopify skincare product, SaaS support"
+    validations:
+      required: true
+
+  - type: textarea
+    id: questions
+    attributes:
+      label: Sanitized customer questions
+      placeholder: |
+        Q1: What is MOQ?
+        Q2: Can you customize logo?
+        Q3: Shipping time to France?
+    validations:
+      required: true
+
+  - type: textarea
+    id: facts
+    attributes:
+      label: Product facts / constraints
+      placeholder: "MOQ, materials, delivery time, warranty, what you cannot promise..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: package
+    attributes:
+      label: If useful, which starter package fits?
+      options:
+        - "¥299 basic FAQ"
+        - "¥999 sales script pack"
+        - "¥2999 automation-ready knowledge base"
+        - "Need custom quote"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: public_safety
+    attributes:
+      label: Public safety
+      options:
+        - label: "I removed private personal/customer data."
+          required: true
+        - label: "I understand this is a public GitHub issue."
+          required: true

@@ -1,5 +1,5 @@
-﻿{
-  "generatedAt": "2026-05-28T02:08:08+08:00",
+{
+  "generatedAt": "2026-05-29T10:11:22+08:00",
   "project": {
     "name": "MiMo Token-To-Cash 30 天增长实验",
     "goal": "让 MiMo 在 30 天内持续产出可交付产品、推广素材和销售资产，验证付款闭环。",
@@ -10,106 +10,537 @@
   "health": {
     "status": "healthy",
     "label": "运行正常",
-    "latestRunAt": "2026-05-28T02:02:29+08:00",
-    "latestRunAgeMinutes": 5.6,
-    "cron": "*/30 * * * * server_loop.py",
-    "cronLogBytes": 0,
-    "serverLogBytes": 0
+    "latestRunAt": "2026-05-29T10:11:22+08:00",
+    "latestRunAgeMinutes": 0.0,
+    "cron": "全天循环：增长每10分钟；GitHub学习每10分钟；机会雷达每小时；主动出击每小时",
+    "cronLogBytes": 21230,
+    "serverLogBytes": 127428
   },
   "metrics": {
-    "productsTotal": 7,
-    "productsOnline": 4,
-    "productsBuilding": 2,
-    "serverRuns": 14,
-    "promotionState": "素材已生成，尚未确认真实外部发布记录",
+    "productsTotal": 49,
+    "productsOnline": 49,
+    "productsBuilding": 0,
+    "serverRuns": 1603,
+    "githubCorpus": 4300,
+    "opportunitySignals": 303,
+    "activeOutreachPosted": 20,
+    "promotionState": "已公开 49 个测试产品；已主动触达 20 条 GitHub issue",
     "revenueState": "暂无付款记录",
     "git": {
       "branch": "main",
-      "head": "cce5aeb"
+      "head": "1647b4a"
     }
   },
   "products": [
     {
-      "id": "P01",
-      "name": "AI 自动化机会评分器",
-      "channel": "公开网页 / GitHub / SEO",
-      "status": "online",
-      "stage": "已上线",
-      "progress": 72,
-      "url": "https://1993921.xyz/mimo-ai-delivery-factory/tools/automation-scorecard/",
-      "next": "增加导出报告、CTA，并启动公开推广。"
-    },
-    {
-      "id": "P02",
-      "name": "n8n JSON 中文解释器",
-      "channel": "GitHub / n8n 社区搜索流量",
-      "status": "online",
-      "stage": "已上线",
-      "progress": 85,
-      "url": "https://1993921.xyz/mimo-ai-delivery-factory/tools/n8n-json-explainer/",
-      "next": "在公开渠道发布并用 Issue intake 收集真实样本。"
-    },
-    {
-      "id": "P03",
-      "name": "客户回复草稿生成器",
-      "channel": "搜索 / 外贸内容 / 公开页面",
-      "status": "queued",
-      "stage": "待构建",
-      "progress": 8,
-      "url": "",
-      "next": "做英文询盘与中文客服双场景 demo。"
-    },
-    {
-      "id": "P04",
-      "name": "自动化 ROI 单页生成器",
-      "channel": "公开页面 / 报价前工具",
-      "status": "queued",
-      "stage": "待并入 P01",
-      "progress": 12,
-      "url": "",
-      "next": "并入 P01 报告导出与报价前说明。"
-    },
-    {
-      "id": "P05",
-      "name": "小企业工作流模板包",
-      "channel": "Gumroad / Ko-fi / GitHub",
-      "status": "waiting",
-      "stage": "等待",
-      "progress": 5,
-      "url": "",
-      "next": "先做免费版 5 个模板。"
-    },
-    {
-      "id": "P06",
-      "name": "n8n Expression 报错排查助手（离线）",
-      "channel": "n8n 社区 / Reddit / GitHub（公开求助）",
-      "status": "online",
-      "stage": "已上线",
-      "progress": 55,
-      "url": "https://1993921.xyz/mimo-ai-delivery-factory/tools/n8n-expression-triage/",
-      "next": "用 3-5 条公开回复把用户引导到脱敏模板 + GitHub Issue intake。"
-    },
-    {
-      "id": "P07",
-      "name": "n8n workflow JSON 脱敏器（离线）",
-      "channel": "n8n 社区 / Reddit / GitHub（公开求助）",
-      "status": "online",
-      "stage": "已上线",
+      "id": "T01",
+      "name": "AI客服30分钟诊断",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "validated",
+      "stage": "重点测试",
       "progress": 65,
-      "url": "https://1993921.xyz/mimo-ai-delivery-factory/tools/n8n-workflow-redactor/",
-      "next": "在公开渠道发布 1 条主贴 + 3-5 条回复引流，收集 ≥1 个脱敏样本到 Issue intake。"
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#ai-customer-support-audit",
+      "next": "已有明确买家痛点，优先主动沟通/补免费诱饵/争取样本。 ¥99起；电商/SaaS客服AI效果不好？抽样对话，输出准确率、人工接管点、知识库缺口。"
+    },
+    {
+      "id": "T02",
+      "name": "外贸询盘自动跟进",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "validated",
+      "stage": "重点测试",
+      "progress": 65,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#foreign-trade-inquiry-automation",
+      "next": "已有明确买家痛点，优先主动沟通/补免费诱饵/争取样本。 ¥999起；分析10封历史询盘，判断是否适合自动分类、摘要、首封回复和CRM同步。"
+    },
+    {
+      "id": "T03",
+      "name": "AI内容安全审查",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "validated",
+      "stage": "重点测试",
+      "progress": 65,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#ai-content-safety-review",
+      "next": "已有明确买家痛点，优先主动沟通/补免费诱饵/争取样本。 ¥599起；审查AI生成内容是否有违规、夸大、敏感行业风险，给出修改建议。"
+    },
+    {
+      "id": "T04",
+      "name": "线索数据清洗去重",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "validated",
+      "stage": "重点测试",
+      "progress": 65,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#lead-data-cleaning",
+      "next": "已有明确买家痛点，优先主动沟通/补免费诱饵/争取样本。 ¥299起；地图/表格/名录线索混乱？清洗、去重、补字段，输出可导入CRM的CSV。"
+    },
+    {
+      "id": "T05",
+      "name": "本地小店AI营销自查",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "testing",
+      "stage": "公开测试",
+      "progress": 45,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#local-business-ai-marketing",
+      "next": "观察点击、Issue、私聊和样本提交；有信号再放大。 免费/¥199起；餐饮、美业、零售：网站/地图商家页/社媒内容基础体检，一周行动清单。"
+    },
+    {
+      "id": "T06",
+      "name": "n8n表达式错误速修",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "validated",
+      "stage": "重点测试",
+      "progress": 65,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#n8n-expression-fix",
+      "next": "已有明确买家痛点，优先主动沟通/补免费诱饵/争取样本。 ¥199起；帮你定位Expression、HTTP Request、IF/Merge等节点报错，给出可复制修复片段。"
+    },
+    {
+      "id": "T07",
+      "name": "n8n工作流安全扫描",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "validated",
+      "stage": "重点测试",
+      "progress": 65,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#n8n-workflow-security",
+      "next": "已有明确买家痛点，优先主动沟通/补免费诱饵/争取样本。 ¥399起；检查工作流是否泄露密钥、危险HTTP请求、无限循环、权限过宽。"
+    },
+    {
+      "id": "T08",
+      "name": "n8n性能优化",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "validated",
+      "stage": "重点测试",
+      "progress": 65,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#n8n-performance-tune",
+      "next": "已有明确买家痛点，优先主动沟通/补免费诱饵/争取样本。 ¥799起；执行慢、超时、内存高？检查分页、批处理、缓存、并发和错误重试。"
+    },
+    {
+      "id": "T09",
+      "name": "浏览器自动化稳定性诊断",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "testing",
+      "stage": "公开测试",
+      "progress": 45,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#browser-automation-audit",
+      "next": "观察点击、Issue、私聊和样本提交；有信号再放大。 ¥399起；Playwright/Selenium脚本老失败？定位选择器、反爬、等待、代理、指纹问题。"
+    },
+    {
+      "id": "T10",
+      "name": "MCP服务器接入快启",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "validated",
+      "stage": "重点测试",
+      "progress": 65,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#mcp-server-quickstart",
+      "next": "已有明确买家痛点，优先主动沟通/补免费诱饵/争取样本。 ¥999起；把已有API/本地工具包装成MCP server，给AI Agent调用。"
+    },
+    {
+      "id": "T11",
+      "name": "AI Agent工作流沙箱",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "validated",
+      "stage": "重点测试",
+      "progress": 65,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#agent-workflow-sandbox",
+      "next": "已有明确买家痛点，优先主动沟通/补免费诱饵/争取样本。 ¥999起；为Agent工具调用加权限边界、日志、隔离和回滚建议。"
+    },
+    {
+      "id": "T12",
+      "name": "Obsidian知识库自动化",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "testing",
+      "stage": "公开测试",
+      "progress": 45,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#obsidian-knowledge-automation",
+      "next": "观察点击、Issue、私聊和样本提交；有信号再放大。 ¥499起；把笔记、网页、会议纪要自动整理为可检索知识库和项目看板。"
+    },
+    {
+      "id": "T13",
+      "name": "公众号/视频内容复用",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "testing",
+      "stage": "公开测试",
+      "progress": 45,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#wechat-content-repurposing",
+      "next": "观察点击、Issue、私聊和样本提交；有信号再放大。 ¥299起；把视频、直播、长文拆成公众号、小红书、朋友圈多版本内容包。"
+    },
+    {
+      "id": "T14",
+      "name": "课程资料AI学习包",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "testing",
+      "stage": "公开测试",
+      "progress": 45,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#course-material-ai-pack",
+      "next": "观察点击、Issue、私聊和样本提交；有信号再放大。 ¥599起；把PDF/PPT/录音整理成知识点、题库、复习卡片和讲义。"
+    },
+    {
+      "id": "T15",
+      "name": "简历/LinkedIn优化",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "testing",
+      "stage": "公开测试",
+      "progress": 45,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#resume-linkedin-optimizer",
+      "next": "观察点击、Issue、私聊和样本提交；有信号再放大。 ¥199起；根据岗位JD重写简历、LinkedIn、求职邮件，突出可量化经历。"
+    },
+    {
+      "id": "T16",
+      "name": "Shopify FAQ客服机器人",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "testing",
+      "stage": "公开测试",
+      "progress": 45,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#shopify-faq-bot",
+      "next": "观察点击、Issue、私聊和样本提交；有信号再放大。 ¥999起；基于商品页、退换货政策和历史客服记录，生成FAQ知识库和客服机器人原型。"
+    },
+    {
+      "id": "T17",
+      "name": "亚马逊评论痛点挖掘",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "testing",
+      "stage": "公开测试",
+      "progress": 45,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#amazon-review-mining",
+      "next": "观察点击、Issue、私聊和样本提交；有信号再放大。 ¥499起；从评论中提取用户痛点、卖点、差评原因，输出产品优化和文案建议。"
+    },
+    {
+      "id": "T18",
+      "name": "B2B独立站转化审计",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "testing",
+      "stage": "公开测试",
+      "progress": 45,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#b2b-website-conversion-audit",
+      "next": "观察点击、Issue、私聊和样本提交；有信号再放大。 ¥699起；审查首页、产品页、询盘表单、信任背书和SEO基础，输出改版清单。"
+    },
+    {
+      "id": "T19",
+      "name": "发票/收据OCR整理",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "testing",
+      "stage": "公开测试",
+      "progress": 45,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#invoice-receipt-ocr",
+      "next": "观察点击、Issue、私聊和样本提交；有信号再放大。 ¥499起；把发票、收据、银行流水整理成结构化表格和月度摘要。"
+    },
+    {
+      "id": "T20",
+      "name": "会议纪要自动化",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "testing",
+      "stage": "公开测试",
+      "progress": 45,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#meeting-summary-automation",
+      "next": "观察点击、Issue、私聊和样本提交；有信号再放大。 ¥499起；把会议录音/纪要转成结论、待办、负责人、截止日期，并同步飞书/Notion。"
+    },
+    {
+      "id": "T21",
+      "name": "Notion/Airtable自动化",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "testing",
+      "stage": "公开测试",
+      "progress": 45,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#notion-airtable-automation",
+      "next": "观察点击、Issue、私聊和样本提交；有信号再放大。 ¥799起；把表格、客户、任务、内容排期连接起来，减少手动复制粘贴。"
+    },
+    {
+      "id": "T22",
+      "name": "Gmail邮件分类与自动回复",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "testing",
+      "stage": "公开测试",
+      "progress": 45,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#gmail-triage-automation",
+      "next": "观察点击、Issue、私聊和样本提交；有信号再放大。 ¥599起；自动分类重要邮件、提取待办、草拟回复、标记客户机会。"
+    },
+    {
+      "id": "T23",
+      "name": "Telegram/微信机器人MVP",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "testing",
+      "stage": "公开测试",
+      "progress": 45,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#telegram-bot-mvp",
+      "next": "观察点击、Issue、私聊和样本提交；有信号再放大。 ¥999起；快速做一个收集线索、自动问答、推送提醒的机器人原型。"
+    },
+    {
+      "id": "T24",
+      "name": "PDF表格/合同信息抽取",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "testing",
+      "stage": "公开测试",
+      "progress": 45,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#pdf-data-extraction",
+      "next": "观察点击、Issue、私聊和样本提交；有信号再放大。 ¥599起；从PDF合同、报价单、报告中抽取关键字段，输出CSV/表格。"
+    },
+    {
+      "id": "T25",
+      "name": "竞品监控日报",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "testing",
+      "stage": "公开测试",
+      "progress": 45,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#competitor-monitoring",
+      "next": "观察点击、Issue、私聊和样本提交；有信号再放大。 ¥799起；监控竞品网站/GitHub/社媒更新，生成每日变化摘要。"
+    },
+    {
+      "id": "T26",
+      "name": "SEO文章集群生成",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "testing",
+      "stage": "公开测试",
+      "progress": 45,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#seo-article-cluster",
+      "next": "观察点击、Issue、私聊和样本提交；有信号再放大。 ¥499起；围绕一个产品关键词生成选题、结构、FAQ和内部链接规划。"
+    },
+    {
+      "id": "T27",
+      "name": "产品图多语言销售文案",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "testing",
+      "stage": "公开测试",
+      "progress": 45,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#product-photo-copywriting",
+      "next": "观察点击、Issue、私聊和样本提交；有信号再放大。 ¥99起；根据产品图生成英文/法语/葡语WhatsApp和社媒销售文案。"
+    },
+    {
+      "id": "T28",
+      "name": "小微客户跟进CRM",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "testing",
+      "stage": "公开测试",
+      "progress": 45,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#small-crm-followup",
+      "next": "观察点击、Issue、私聊和样本提交；有信号再放大。 ¥999起；用表格/飞书/机器人做客户跟进提醒、话术建议和成交状态。"
+    },
+    {
+      "id": "T29",
+      "name": "轻量业务数据看板",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "testing",
+      "stage": "公开测试",
+      "progress": 45,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#data-dashboard-lite",
+      "next": "观察点击、Issue、私聊和样本提交；有信号再放大。 ¥999起；把CSV/表格/数据库做成可视化经营看板，先跑核心指标。"
+    },
+    {
+      "id": "T30",
+      "name": "AI工具目录提交包",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "testing",
+      "stage": "公开测试",
+      "progress": 45,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#ai-tool-directory-submit",
+      "next": "观察点击、Issue、私聊和样本提交；有信号再放大。 ¥399起；帮AI工具整理一句话定位、截图、提交文案，投放到目录站收集初始流量。"
+    },
+    {
+      "id": "T31",
+      "name": "AI副业项目选择诊断",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "testing",
+      "stage": "公开测试",
+      "progress": 45,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#ai-side-hustle-picker",
+      "next": "观察点击、Issue、私聊和样本提交；有信号再放大。 ¥199起；根据你的技能、资源和时间，从AI图片、文案、自动化、工具站、小B服务里筛3个最适合先测的方向。"
+    },
+    {
+      "id": "T32",
+      "name": "AI图片接单工具包",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "testing",
+      "stage": "公开测试",
+      "progress": 45,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#ai-image-gig-pack",
+      "next": "观察点击、Issue、私聊和样本提交；有信号再放大。 ¥299起；头像、LOGO、商品广告图、模特换装、照片修复：提供提示词、报价、交付SOP。"
+    },
+    {
+      "id": "T33",
+      "name": "AI内容流量启动包",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "testing",
+      "stage": "公开测试",
+      "progress": 45,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#ai-content-traffic-starter",
+      "next": "观察点击、Issue、私聊和样本提交；有信号再放大。 ¥499起；帮你确定账号定位、选题、爆款结构，并生成10条可发布内容草稿。"
+    },
+    {
+      "id": "T34",
+      "name": "AI API成本/稳定性诊断",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "validated",
+      "stage": "重点测试",
+      "progress": 65,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#api-cost-stability-audit",
+      "next": "已有明确买家痛点，优先主动沟通/补免费诱饵/争取样本。 ¥499起；检查模型路由、缓存、限流、fallback、成本结构，只做合规技术优化建议。"
+    },
+    {
+      "id": "T35",
+      "name": "AI客服/知识库诊断",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "seed",
+      "stage": "机会种子",
+      "progress": 25,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#radar-ai-1",
+      "next": "先保留入口；需要补清单、模板或第一条主动触达后再升级。 ¥199-999诊断；来源：github；痛点：回复不准、转人工高、知识库混乱；参考：bleedline/aimoneyhunter"
+    },
+    {
+      "id": "T36",
+      "name": "会议/邮件自动化",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "seed",
+      "stage": "机会种子",
+      "progress": 25,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#radar-2",
+      "next": "先保留入口；需要补清单、模板或第一条主动触达后再升级。 ¥199-999诊断；来源：github；痛点：纪要、待办、邮件分类手工处理；参考：Zackriya-Solutions/meetily"
+    },
+    {
+      "id": "T37",
+      "name": "Agent/Coding工作流诊断",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "seed",
+      "stage": "机会种子",
+      "progress": 25,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#radar-agent-coding-3",
+      "next": "先保留入口；需要补清单、模板或第一条主动触达后再升级。 ¥199-999诊断；来源：github；痛点：Agent落地、安全、成本、代码质量不可控；参考：aitytech/agentkits-marketing"
+    },
+    {
+      "id": "T38",
+      "name": "AI简历/JD匹配优化",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "seed",
+      "stage": "机会种子",
+      "progress": 25,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#radar-ai-jd-4",
+      "next": "先保留入口；需要补清单、模板或第一条主动触达后再升级。 ¥199-999诊断；来源：github；痛点：简历不会针对岗位表达；参考：olyaiy/resume-lm"
+    },
+    {
+      "id": "T39",
+      "name": "n8n/工作流诊断",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "seed",
+      "stage": "机会种子",
+      "progress": 25,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#radar-n8n-5",
+      "next": "先保留入口；需要补清单、模板或第一条主动触达后再升级。 ¥199-999诊断；来源：github；痛点：工作流报错、性能慢、安全风险；参考：emretasss/AI-Workflow-Hub-2000-"
+    },
+    {
+      "id": "T40",
+      "name": "AI内容流量启动包 #6",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "seed",
+      "stage": "机会种子",
+      "progress": 25,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#radar-ai-6",
+      "next": "先保留入口；需要补清单、模板或第一条主动触达后再升级。 ¥199-999诊断；来源：github；痛点：批量内容生产和分发缺流程；参考：naqashafzal/AI-Content-Studio"
+    },
+    {
+      "id": "T41",
+      "name": "AI营销/SEO自动化",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "seed",
+      "stage": "机会种子",
+      "progress": 25,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#radar-ai-seo-7",
+      "next": "先保留入口；需要补清单、模板或第一条主动触达后再升级。 ¥199-999诊断；来源：github；痛点：选题、文章集群、社媒排期效率低；参考：Shreyas-29/vetra"
+    },
+    {
+      "id": "T42",
+      "name": "AI垂直微工具/诊断",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "seed",
+      "stage": "机会种子",
+      "progress": 25,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#radar-ai-8",
+      "next": "先保留入口；需要补清单、模板或第一条主动触达后再升级。 ¥199-999诊断；来源：github；痛点：已有需求但缺最小可卖交付；参考：zinedkaloc/ai-travel-planner"
+    },
+    {
+      "id": "T43",
+      "name": "PDF/OCR信息抽取服务",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "seed",
+      "stage": "机会种子",
+      "progress": 25,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#radar-pdf-ocr-9",
+      "next": "先保留入口；需要补清单、模板或第一条主动触达后再升级。 ¥199-999诊断；来源：github；痛点：PDF/票据/合同字段手工录入；参考：xup6jammy/AI-INVOICE-OCR-ENGINE"
+    },
+    {
+      "id": "T44",
+      "name": "线索/询盘自动化诊断",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "seed",
+      "stage": "机会种子",
+      "progress": 25,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#radar-10",
+      "next": "先保留入口；需要补清单、模板或第一条主动触达后再升级。 ¥199-999诊断；来源：github；痛点：线索质量差、跟进慢、手工整理耗时；参考：toofast1/awesome-ai-lead-generation"
+    },
+    {
+      "id": "T45",
+      "name": "AI图片接单/商品图工具包",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "seed",
+      "stage": "机会种子",
+      "progress": 25,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#radar-ai-11",
+      "next": "先保留入口；需要补清单、模板或第一条主动触达后再升级。 ¥199-999诊断；来源：github；痛点：商品图、广告图、头像、换装交付成本高；参考：theone-ctrl/ai-content-automation-n"
+    },
+    {
+      "id": "T46",
+      "name": "AI 10美元小产品代工",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "validated",
+      "stage": "重点测试",
+      "progress": 65,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#ai-10-dollar-product-builder",
+      "next": "已有明确买家痛点，优先主动沟通/补免费诱饵/争取样本。 ¥299起；把你的经验、教程、模板或踩坑记录，整理成一个可上架的小型数字产品包。"
+    },
+    {
+      "id": "T47",
+      "name": "数字产品包装诊断",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "validated",
+      "stage": "重点测试",
+      "progress": 65,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#digital-product-packaging-audit",
+      "next": "已有明确买家痛点，优先主动沟通/补免费诱饵/争取样本。 ¥199起；检查标题、卖点、封面、说明、下载包、购买路径，把技术话术改成人话。"
+    },
+    {
+      "id": "T48",
+      "name": "Codex赚钱提示词包",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "testing",
+      "stage": "公开测试",
+      "progress": 45,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#codex-money-prompt-kit",
+      "next": "观察点击、Issue、私聊和样本提交；有信号再放大。 ¥99起；围绕目标、边界、交付、授权节点，定制一套让Agent做小产品的执行提示词。"
+    },
+    {
+      "id": "T49",
+      "name": "AI API Gateway教程包",
+      "channel": "快速测试页 / GitHub Issue intake / 主动出击",
+      "status": "testing",
+      "stage": "公开测试",
+      "progress": 45,
+      "url": "https://1993921.xyz/mimo-ai-delivery-factory/quick-tests/#api-gateway-worker-kit-cn",
+      "next": "观察点击、Issue、私聊和样本提交；有信号再放大。 ¥399起；把模型API、Worker网关、上游稳定性和普通用户痛点整理成可交付教程。"
     }
   ],
+  "demos": {
+    "count": 12,
+    "url": "https://1993921.xyz/mimo-ai-delivery-factory/demos/"
+  },
+  "complete_products": {
+    "count": 49,
+    "url": "https://1993921.xyz/mimo-ai-delivery-factory/products/"
+  },
   "promotion": {
-    "status": "ready_not_published",
-    "label": "推广素材已准备，尚未记录正式外发",
+    "status": "published_and_outbound",
+    "label": "已公开测试并开始主动出击",
     "nextChannels": [
+      "GitHub help-wanted issues",
+      "飞书 AI交流群",
       "GitHub README",
-      "n8n 相关公开讨论",
-      "技术社区长文",
-      "SEO 页面"
+      "AIHOT/微信项目复盘"
     ],
-    "nextAction": "先发布 P02（离线+脱敏+Issue intake），用公开回复求助帖获取样本。"
+    "nextAction": "继续筛高质量需求，优先做真人口吻评论、小PR和样本诊断。"
   },
   "confirmationQueue": [
     {
@@ -120,37 +551,37 @@
   ],
   "recentRuns": [
     {
-      "file": "20260528-020241-本轮输出-P07需求证据与外联执行包.md",
-      "updatedAt": "2026-05-28T02:02:29+08:00",
-      "title": "What changed",
+      "file": "20260529-101115-profit-only-actions.md",
+      "updatedAt": "2026-05-29T10:11:22+08:00",
+      "title": "停止规则",
       "choice": "",
       "paymentReady": "none"
     },
     {
-      "file": "20260528-015851-MiMo后台工厂输出.md",
-      "updatedAt": "2026-05-28T01:59:44+08:00",
-      "title": "P07 n8n 工作流 JSON 脱敏器：公开平台发布行动包",
+      "file": "20260529-100002-growth-summary.md",
+      "updatedAt": "2026-05-29T10:04:13+08:00",
+      "title": "outreach-queue",
       "choice": "",
       "paymentReady": "none"
     },
     {
-      "file": "20260528-020045-本轮输出-P08-CLI脱敏器与GitHubAction.md",
-      "updatedAt": "2026-05-28T01:59:17+08:00",
-      "title": "What I did",
+      "file": "20260529-100002-growth-learning-notes.md",
+      "updatedAt": "2026-05-29T10:04:13+08:00",
+      "title": "方向总结与明日执行清单",
       "choice": "",
       "paymentReady": "none"
     },
     {
-      "file": "20260528-012851-MiMo后台工厂输出.md",
-      "updatedAt": "2026-05-28T01:29:25+08:00",
-      "title": "P07 n8n 工作流 JSON 脱敏器：公开发布行动包",
+      "file": "20260529-100002-growth-offer-matrix.md",
+      "updatedAt": "2026-05-29T10:03:32+08:00",
+      "title": "MiMo Token-To-Cash 30天增长实验：全方向报价矩阵",
       "choice": "",
       "paymentReady": "none"
     },
     {
-      "file": "20260528-012300-本轮输出-P07脱敏器外联资产.md",
-      "updatedAt": "2026-05-28T01:22:33+08:00",
-      "title": "本轮最高杠杆动作",
+      "file": "20260529-100002-growth-outreach-queue.md",
+      "updatedAt": "2026-05-29T10:02:52+08:00",
+      "title": "本轮执行计划：公开触达回复队列（50条草稿）",
       "choice": "",
       "paymentReady": "none"
     }
